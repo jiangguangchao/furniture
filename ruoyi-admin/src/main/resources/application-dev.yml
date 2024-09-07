@@ -1,0 +1,20 @@
+
+# Spring配置
+spring:
+  datasource:
+    druid:
+      master:
+        url: jdbc:mysql://localhost:3306/furniture?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        username: root
+        password: jgc!#2022
+  # redis 配置
+  redis:
+    # 地址
+    host: localhost
+    # 端口，默认为6379
+    port: 6379
+    # 数据库索引
+    database: 0
+    # 密码
+    password:
+
