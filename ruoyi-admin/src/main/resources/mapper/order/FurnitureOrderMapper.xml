@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jgc.mapper.FurnitureOrderMapper">
+    
+    <resultMap type="FurnitureOrder" id="FurnitureOrderResult">
+        <result property="id"    column="id"    />
+        <result property="totalMoney"    column="total_money"    />
+        <result property="paidMoney"    column="paid_money"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="orderTime"    column="order_time"    />
+        <result property="orderUser"    column="order_user"    />
+        <result property="phoneNumber"    column="phone_number"    />
+        <result property="district"    column="district"    />
+        <result property="town"    column="town"    />
+        <result property="village"    column="village"    />
+        <result property="dui"    column="dui"    />
+        <result property="subVillage"    column="sub_village"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectFurnitureOrderVo">
+        select id, total_money, paid_money, order_status, order_time, order_user, phone_number, district, town, village, dui, sub_village, create_time, create_user, remark from furniture_order
+    </sql>
+
+    <select id="selectFurnitureOrderList" parameterType="FurnitureOrder" resultMap="FurnitureOrderResult">
+        <include refid="selectFurnitureOrderVo"/>
+        <where>  
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+            <if test="params.beginTotalMoney != null and params.beginTotalMoney != '' and params.endTotalMoney != null and params.endTotalMoney != ''"> and total_money between #{params.beginTotalMoney} and #{params.endTotalMoney}</if>
+            <if test="orderStatus != null  and orderStatus != ''"> and order_status = #{orderStatus}</if>
+            <if test="params.beginOrderTime != null and params.beginOrderTime != '' and params.endOrderTime != null and params.endOrderTime != ''"> and order_time between #{params.beginOrderTime} and #{params.endOrderTime}</if>
+            <if test="orderUser != null  and orderUser != ''"> and order_user like concat('%', #{orderUser}, '%')</if>
+            <if test="phoneNumber != null  and phoneNumber != ''"> and phone_number like concat('%', #{phoneNumber}, '%')</if>
+            <if test="town != null  and town != ''"> and town = #{town}</if>
+            <if test="village != null  and village != ''"> and village = #{village}</if>
+        </where>
+    </select>
+    
+    <select id="selectFurnitureOrderById" parameterType="String" resultMap="FurnitureOrderResult">
+        <include refid="selectFurnitureOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFurnitureOrder" parameterType="FurnitureOrder">
+        insert into furniture_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="totalMoney != null">total_money,</if>
+            <if test="paidMoney != null">paid_money,</if>
+            <if test="orderStatus != null and orderStatus != ''">order_status,</if>
+            <if test="orderTime != null">order_time,</if>
+            <if test="orderUser != null and orderUser != ''">order_user,</if>
+            <if test="phoneNumber != null and phoneNumber != ''">phone_number,</if>
+            <if test="district != null and district != ''">district,</if>
+            <if test="town != null and town != ''">town,</if>
+            <if test="village != null and village != ''">village,</if>
+            <if test="dui != null">dui,</if>
+            <if test="subVillage != null">sub_village,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="totalMoney != null">#{totalMoney},</if>
+            <if test="paidMoney != null">#{paidMoney},</if>
+            <if test="orderStatus != null and orderStatus != ''">#{orderStatus},</if>
+            <if test="orderTime != null">#{orderTime},</if>
+            <if test="orderUser != null and orderUser != ''">#{orderUser},</if>
+            <if test="phoneNumber != null and phoneNumber != ''">#{phoneNumber},</if>
+            <if test="district != null and district != ''">#{district},</if>
+            <if test="town != null and town != ''">#{town},</if>
+            <if test="village != null and village != ''">#{village},</if>
+            <if test="dui != null">#{dui},</if>
+            <if test="subVillage != null">#{subVillage},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFurnitureOrder" parameterType="FurnitureOrder">
+        update furniture_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="totalMoney != null">total_money = #{totalMoney},</if>
+            <if test="paidMoney != null">paid_money = #{paidMoney},</if>
+            <if test="orderStatus != null and orderStatus != ''">order_status = #{orderStatus},</if>
+            <if test="orderTime != null">order_time = #{orderTime},</if>
+            <if test="orderUser != null and orderUser != ''">order_user = #{orderUser},</if>
+            <if test="phoneNumber != null and phoneNumber != ''">phone_number = #{phoneNumber},</if>
+            <if test="district != null and district != ''">district = #{district},</if>
+            <if test="town != null and town != ''">town = #{town},</if>
+            <if test="village != null and village != ''">village = #{village},</if>
+            <if test="dui != null">dui = #{dui},</if>
+            <if test="subVillage != null">sub_village = #{subVillage},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFurnitureOrderById" parameterType="String">
+        delete from furniture_order where id = #{id}
+    </delete>
+
+    <delete id="deleteFurnitureOrderByIds" parameterType="String">
+        delete from furniture_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jgc.mapper.DistrictsMapper">
+    
+    <resultMap type="Districts" id="DistrictsResult">
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="pCode"    column="pCode"    />
+    </resultMap>
+
+    <sql id="selectDistrictsVo">
+        select code, name, pCode from districts
+    </sql>
+
+    <select id="selectDistrictsList" parameterType="Districts" resultMap="DistrictsResult">
+        <include refid="selectDistrictsVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="pCode != null  and pCode != ''"> and pCode = #{pCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectDistrictsByCode" parameterType="String" resultMap="DistrictsResult">
+        <include refid="selectDistrictsVo"/>
+        where code = #{code}
+    </select>
+
+    <insert id="insertDistricts" parameterType="Districts">
+        insert into districts
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">code,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="pCode != null">pCode,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">#{code},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="pCode != null">#{pCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDistricts" parameterType="Districts">
+        update districts
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="pCode != null">pCode = #{pCode},</if>
+        </trim>
+        where code = #{code}
+    </update>
+
+    <delete id="deleteDistrictsByCode" parameterType="String">
+        delete from districts where code = #{code}
+    </delete>
+
+    <delete id="deleteDistrictsByCodes" parameterType="String">
+        delete from districts where code in 
+        <foreach item="code" collection="array" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+</mapper>
