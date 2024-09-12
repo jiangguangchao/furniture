@@ -54,6 +54,7 @@ public class FurnitureOrderServiceImpl implements IFurnitureOrderService
     public int insertFurnitureOrder(FurnitureOrder furnitureOrder)
     {
         furnitureOrder.setCreateTime(DateUtils.getNowDate());
+        furnitureOrder.setId(DateUtils.dateTimeNow(DateUtils.YYYYMMDDHHMMSS));
         return furnitureOrderMapper.insertFurnitureOrder(furnitureOrder);
     }
 

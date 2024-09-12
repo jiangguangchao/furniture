@@ -77,6 +77,7 @@ public class FurnitureOrderController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody FurnitureOrder furnitureOrder)
     {
+        furnitureOrder.setCreateUser(getUsername());
         return toAjax(furnitureOrderService.insertFurnitureOrder(furnitureOrder));
     }
 
