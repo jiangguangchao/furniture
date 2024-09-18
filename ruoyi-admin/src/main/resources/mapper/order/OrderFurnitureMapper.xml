@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jgc.mapper.OrderFurnitureMapper">
+    
+    <resultMap type="OrderFurniture" id="OrderFurnitureResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="category"    column="category"    />
+        <result property="style"    column="style"    />
+        <result property="material"    column="material"    />
+        <result property="size"    column="size"    />
+        <result property="bedWidth"    column="bed_width"    />
+        <result property="money"    column="money"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectOrderFurnitureVo">
+        select id, order_id, category, style, material, size, bed_width, money, create_by, create_time, update_by, update_time, remark from order_furniture
+    </sql>
+
+    <select id="selectOrderFurnitureList" parameterType="OrderFurniture" resultMap="OrderFurnitureResult">
+        <include refid="selectOrderFurnitureVo"/>
+        <where>  
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="style != null  and style != ''"> and style = #{style}</if>
+            <if test="material != null  and material != ''"> and material = #{material}</if>
+            <if test="size != null "> and size = #{size}</if>
+            <if test="bedWidth != null  and bedWidth != ''"> and bed_width = #{bedWidth}</if>
+            <if test="money != null "> and money = #{money}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderFurnitureById" parameterType="Long" resultMap="OrderFurnitureResult">
+        <include refid="selectOrderFurnitureVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOrderFurniture" parameterType="OrderFurniture" useGeneratedKeys="true" keyProperty="id">
+        insert into order_furniture
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="style != null">style,</if>
+            <if test="material != null">material,</if>
+            <if test="size != null">size,</if>
+            <if test="bedWidth != null">bed_width,</if>
+            <if test="money != null">money,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="style != null">#{style},</if>
+            <if test="material != null">#{material},</if>
+            <if test="size != null">#{size},</if>
+            <if test="bedWidth != null">#{bedWidth},</if>
+            <if test="money != null">#{money},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderFurniture" parameterType="OrderFurniture">
+        update order_furniture
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="style != null">style = #{style},</if>
+            <if test="material != null">material = #{material},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="bedWidth != null">bed_width = #{bedWidth},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderFurnitureById" parameterType="Long">
+        delete from order_furniture where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderFurnitureByIds" parameterType="String">
+        delete from order_furniture where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
