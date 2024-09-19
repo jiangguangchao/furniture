@@ -1,5 +1,6 @@
 package com.ruoyi.jgc.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -77,6 +78,7 @@ public class PaymentRecordController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PaymentRecord paymentRecord)
     {
+        paymentRecord.setCreateBy(getUsername());
         return toAjax(paymentRecordService.insertPaymentRecord(paymentRecord));
     }
 
@@ -88,6 +90,8 @@ public class PaymentRecordController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody PaymentRecord paymentRecord)
     {
+        paymentRecord.setUpdateBy(getUsername());
+        paymentRecord.setUpdateTime(new Date());
         return toAjax(paymentRecordService.updatePaymentRecord(paymentRecord));
     }
 

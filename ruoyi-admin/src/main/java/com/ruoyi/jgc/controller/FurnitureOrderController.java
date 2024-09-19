@@ -1,5 +1,6 @@
 package com.ruoyi.jgc.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -89,6 +90,8 @@ public class FurnitureOrderController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody FurnitureOrder furnitureOrder)
     {
+        furnitureOrder.setUpdateBy(getUsername());
+        furnitureOrder.setUpdateTime(new Date());
         return toAjax(furnitureOrderService.updateFurnitureOrder(furnitureOrder));
     }
 

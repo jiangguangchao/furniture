@@ -1,5 +1,6 @@
 package com.ruoyi.jgc.controller;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +19,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.jgc.domain.OrderDeliveryRecord;
 import com.ruoyi.jgc.service.IOrderDeliveryRecordService;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -77,6 +79,7 @@ public class OrderDeliveryRecordController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody OrderDeliveryRecord orderDeliveryRecord)
     {
+        orderDeliveryRecord.setCreateBy(getUsername());
         return toAjax(orderDeliveryRecordService.insertOrderDeliveryRecord(orderDeliveryRecord));
     }
 
@@ -88,6 +91,8 @@ public class OrderDeliveryRecordController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OrderDeliveryRecord orderDeliveryRecord)
     {
+        orderDeliveryRecord.setUpdateBy(getUsername());
+        orderDeliveryRecord.setUpdateTime(new Date());
         return toAjax(orderDeliveryRecordService.updateOrderDeliveryRecord(orderDeliveryRecord));
     }
 

@@ -25,8 +25,8 @@ public class OrderDeliveryRecord extends BaseEntity
     private String orderId;
 
     /** 配送时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "配送时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "配送时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date deliveryTime;
 
     /** 配送状态 */
