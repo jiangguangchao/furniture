@@ -1,5 +1,6 @@
 package com.ruoyi.common.core.domain.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.*;
@@ -88,6 +89,16 @@ public class SysUser extends BaseEntity
 
     /** 角色ID */
     private Long roleId;
+
+    private BigDecimal salary;
+
+    public BigDecimal getSalary() {
+        return salary;
+    }
+
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
 
     public SysUser()
     {

@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.system.domain.SysPost;
+import com.ruoyi.system.domain.vo.UserPostVo;
 
 /**
  * 岗位信息 服务层
@@ -24,6 +25,12 @@ public interface ISysPostService
      * @return 岗位列表
      */
     public List<SysPost> selectPostAll();
+
+    /**
+     * 查询所有岗位上的所有用户
+     * 
+     */
+    public List<UserPostVo> selectAllPostUser();
 
     /**
      * 通过岗位ID查询岗位信息

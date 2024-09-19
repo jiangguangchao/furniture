@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import java.util.List;
 import com.ruoyi.system.domain.SysUserPost;
+import com.ruoyi.system.domain.vo.UserPostVo;
 
 /**
  * 用户与岗位关联表 数据层
@@ -41,4 +42,10 @@ public interface SysUserPostMapper
      * @return 结果
      */
     public int batchUserPost(List<SysUserPost> userPostList);
+
+    /**
+     * 查询所有岗位的所有用户
+     * @return
+     */
+    public List<UserPostVo> selectAllPostUser();
 }

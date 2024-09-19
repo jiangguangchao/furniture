@@ -7,6 +7,7 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysPost;
+import com.ruoyi.system.domain.vo.UserPostVo;
 import com.ruoyi.system.mapper.SysPostMapper;
 import com.ruoyi.system.mapper.SysUserPostMapper;
 import com.ruoyi.system.service.ISysPostService;
@@ -46,6 +47,15 @@ public class SysPostServiceImpl implements ISysPostService
     public List<SysPost> selectPostAll()
     {
         return postMapper.selectPostAll();
+    }
+
+    
+    /**
+     * 查询所有岗位上的所有用户
+     * 
+     */
+    public List<UserPostVo> selectAllPostUser() {
+        return userPostMapper.selectAllPostUser();
     }
 
     /**

@@ -21,7 +21,7 @@ public class OrderFurniture extends BaseEntity
 
     /** 订单号 */
     @Excel(name = "订单号")
-    private Long orderId;
+    private String orderId;
 
     /** 家具类别 */
     @Excel(name = "家具类别")
@@ -56,12 +56,12 @@ public class OrderFurniture extends BaseEntity
     {
         return id;
     }
-    public void setOrderId(Long orderId) 
+    public void setOrderId(String orderId) 
     {
         this.orderId = orderId;
     }
 
-    public Long getOrderId() 
+    public String getOrderId() 
     {
         return orderId;
     }

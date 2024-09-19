@@ -126,4 +126,9 @@ public class SysPostController extends BaseController
         List<SysPost> posts = postService.selectPostAll();
         return success(posts);
     }
+
+    @GetMapping("/selectAllPostUser")
+    public AjaxResult selectAllPostUser(){
+        return success(postService.selectAllPostUser());
+    }
 }
