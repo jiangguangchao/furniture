@@ -34,8 +34,8 @@ public class FurnitureOrder extends BaseEntity
     private String orderStatus;
 
     /** 下单时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "下单时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "下单时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date orderTime;
 
     /** 下单人 */

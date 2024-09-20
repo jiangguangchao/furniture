@@ -1,5 +1,6 @@
 package com.ruoyi.jgc.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -10,8 +11,11 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.OrderDeliveryRecordMapper;
 import com.ruoyi.jgc.domain.FurnitureOrder;
 import com.ruoyi.jgc.domain.OrderDeliveryRecord;
+import com.ruoyi.jgc.domain.WorkRecord;
 import com.ruoyi.jgc.service.IFurnitureOrderService;
 import com.ruoyi.jgc.service.IOrderDeliveryRecordService;
+import com.ruoyi.jgc.service.IWorkRecordService;
+import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 配送记录Service业务层处理
@@ -26,6 +30,10 @@ public class OrderDeliveryRecordServiceImpl implements IOrderDeliveryRecordServi
     private OrderDeliveryRecordMapper orderDeliveryRecordMapper;
     @Autowired
     private IFurnitureOrderService orderService;
+    @Autowired
+    private IWorkRecordService workRecordService;
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询配送记录
@@ -75,12 +83,40 @@ public class OrderDeliveryRecordServiceImpl implements IOrderDeliveryRecordServi
     @Override
     public int updateOrderDeliveryRecord(OrderDeliveryRecord orderDeliveryRecord)
     {
+
+        OrderDeliveryRecord oldRecord = orderDeliveryRecordMapper.selectOrderDeliveryRecordById(orderDeliveryRecord.getId());
+
         orderDeliveryRecord.setUpdateTime(DateUtils.getNowDate());
         String orderId = orderDeliveryRecord.getOrderId();
         //不需要修改订单编号。如果订单编号错误可以直接删除配送记录。新增正确的记录
         orderDeliveryRecord.setOrderId(null);
         int result = orderDeliveryRecordMapper.updateOrderDeliveryRecord(orderDeliveryRecord);
+
+        //更新订单中的配送状态
         updateOrderDeliveryStatus(orderId);
+
+        //如果配送记录的配送状态改为了“配送完成”，则生成对应的工作记录到工作记录表
+        if ("3".equals(orderDeliveryRecord.getDeliveryStatus()) && !"3".equals(oldRecord.getDeliveryStatus())) {
+            //生成工作记录
+            WorkRecord workRecord = new WorkRecord();
+            workRecord.setOrderId(orderId);
+            workRecord.setWorkerId(orderDeliveryRecord.getWorkerId());
+            workRecord.setDeliveryId(orderDeliveryRecord.getId());
+            workRecord.setSalary(userService.selectUserById(orderDeliveryRecord.getWorkerId()).getSalary());//从员工信息中获取工资
+
+            Date deliveryTime = orderDeliveryRecord.getDeliveryTime();
+            if (deliveryTime == null) {
+                deliveryTime = oldRecord.getDeliveryTime();
+            }
+            if (deliveryTime == null) {
+                deliveryTime = new Date();
+            }
+            workRecord.setWorkDate(deliveryTime);
+            workRecord.setDeliveryTime(deliveryTime);
+            workRecord.setCreateBy("system");//表示是系统自动创建的记录
+            workRecordService.insertWorkRecord(workRecord);
+        }
+
         return result;
     }
 

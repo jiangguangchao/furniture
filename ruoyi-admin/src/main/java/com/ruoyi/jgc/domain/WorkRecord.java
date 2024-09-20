@@ -35,8 +35,8 @@ public class WorkRecord extends BaseEntity
     private String workPeriod;
 
     /** 配送时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "配送时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "配送时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date deliveryTime;
 
     /** 订单编号 */
@@ -50,6 +50,16 @@ public class WorkRecord extends BaseEntity
     /** 加班费 */
     @Excel(name = "加班费")
     private BigDecimal overtimePay;
+
+    private Long deliveryId;
+
+    public Long getDeliveryId() {
+        return deliveryId;
+    }
+
+    public void setDeliveryId(Long deliveryId) {
+        this.deliveryId = deliveryId;
+    }
 
     public void setId(Long id) 
     {
