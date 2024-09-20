@@ -57,5 +57,12 @@ public interface IOrderDeliveryRecordService
      * @param id 配送记录主键
      * @return 结果
      */
-    public int deleteOrderDeliveryRecordById(Long id);
+    public int deleteOrderDeliveryRecordById(Long id, String orderId);
+
+    /**
+     * 更新订单的配送状态。 注意：不是更新配送记录的配送状态
+     * @param orderId
+     * @return
+     */
+    public int updateOrderDeliveryStatus(String orderId);
 }

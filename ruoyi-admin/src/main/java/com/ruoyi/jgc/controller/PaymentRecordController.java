@@ -100,9 +100,9 @@ public class PaymentRecordController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('order:paymentRecord:remove')")
     @Log(title = "支付记录", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/delete")
+    public AjaxResult remove(PaymentRecord paymentRecord)
     {
-        return toAjax(paymentRecordService.deletePaymentRecordByIds(ids));
+        return toAjax(paymentRecordService.deletePaymentRecordById(paymentRecord.getId(), paymentRecord.getOrderId()));
     }
 }

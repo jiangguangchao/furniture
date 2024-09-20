@@ -100,9 +100,9 @@ public class OrderFurnitureController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('order:orderFurniture:remove')")
     @Log(title = "订单中家具", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/delete")
+    public AjaxResult remove(OrderFurniture orderFurniture)
     {
-        return toAjax(orderFurnitureService.deleteOrderFurnitureByIds(ids));
+        return toAjax(orderFurnitureService.deleteOrderFurnitureById(orderFurniture.getId(), orderFurniture.getOrderId()));
     }
 }

@@ -65,6 +65,26 @@ public class FurnitureOrder extends BaseEntity
     @Excel(name = "创建人")
     private String createUser;
 
+    private String paymentStatus;
+
+    private String deliveryStatus;
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getDeliveryStatus() {
+        return deliveryStatus;
+    }
+
+    public void setDeliveryStatus(String deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
+    }
+
     public void setId(String id) 
     {
         this.id = id;

@@ -19,11 +19,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="subVillage"    column="sub_village"    />
         <result property="createTime"    column="create_time"    />
         <result property="createUser"    column="create_user"    />
-        <result property="remark"    column="remark"    />
+        <result property="paymentStatus"    column="payment_status"    />
+        <result property="deliveryStatus"    column="delivery_status"    />
     </resultMap>
 
     <sql id="selectFurnitureOrderVo">
-        select id, total_money, paid_money, order_status, order_time, order_user, phone_number, district, town, village, dui, sub_village, create_time, create_user, remark from furniture_order
+        select id, total_money, paid_money, order_status, order_time, order_user, phone_number, district, 
+            town, village, dui, sub_village, create_time, create_user, remark , payment_status, delivery_status
+        from furniture_order
     </sql>
 
     <select id="selectFurnitureOrderList" parameterType="FurnitureOrder" resultMap="FurnitureOrderResult">
@@ -37,6 +40,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phoneNumber != null  and phoneNumber != ''"> and phone_number like concat('%', #{phoneNumber}, '%')</if>
             <if test="town != null  and town != ''"> and town = #{town}</if>
             <if test="village != null  and village != ''"> and village = #{village}</if>
+            <if test="paymentStatus != null  and paymentStatus != ''"> and payment_status = #{paymentStatus}</if>
+            <if test="deliveryStatus != null  and deliveryStatus != ''"> and delivery_status = #{deliveryStatus}</if>
         </where>
     </select>
     
@@ -63,6 +68,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="createUser != null">create_user,</if>
             <if test="remark != null">remark,</if>
+            <if test="paymentStatus != null and paymentStatus != ''">payment_status,</if>
+            <if test="deliveryStatus != null and deliveryStatus != ''">delivery_status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -80,6 +87,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="createUser != null">#{createUser},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="paymentStatus != null and paymentStatus != ''">#{paymentStatus},</if>
+            <if test="deliveryStatus != null and deliveryStatus != ''">#{deliveryStatus},</if>
          </trim>
     </insert>
 
@@ -100,6 +109,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createUser != null">create_user = #{createUser},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="paymentStatus != null and paymentStatus != ''">payment_status = #{paymentStatus},</if>
+            <if test="deliveryStatus != null and deliveryStatus != ''">delivery_status = #{deliveryStatus},</if>
         </trim>
         where id = #{id}
     </update>

@@ -57,5 +57,12 @@ public interface IOrderFurnitureService
      * @param id 订单中家具主键
      * @return 结果
      */
-    public int deleteOrderFurnitureById(Long id);
+    public int deleteOrderFurnitureById(Long id, String orderId);
+
+    /**
+     * 更新订单中的总金额
+     * @param orderId
+     * @return
+     */
+    public int updateOrderTotalAmount(String orderId);
 }

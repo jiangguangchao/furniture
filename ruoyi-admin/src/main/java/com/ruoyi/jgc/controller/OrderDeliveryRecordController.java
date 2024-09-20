@@ -101,9 +101,9 @@ public class OrderDeliveryRecordController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('order:deliveryRecord:remove')")
     @Log(title = "配送记录", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/delete")
+    public AjaxResult remove(OrderDeliveryRecord orderDeliveryRecord)
     {
-        return toAjax(orderDeliveryRecordService.deleteOrderDeliveryRecordByIds(ids));
+        return toAjax(orderDeliveryRecordService.deleteOrderDeliveryRecordById(orderDeliveryRecord.getId(), orderDeliveryRecord.getOrderId()));
     }
 }

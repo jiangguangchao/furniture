@@ -57,5 +57,12 @@ public interface IPaymentRecordService
      * @param id 支付记录主键
      * @return 结果
      */
-    public int deletePaymentRecordById(Long id);
+    public int deletePaymentRecordById(Long id, String orderId);
+
+    /**
+     * 更新订单中的支付信息（支付金额和支付状态）
+     * @param orderId
+     * @return
+     */
+    public int updateOrderPayment(String orderId);
 }
