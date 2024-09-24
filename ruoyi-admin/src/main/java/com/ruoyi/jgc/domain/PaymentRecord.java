@@ -31,10 +31,19 @@ public class PaymentRecord extends BaseEntity
     @Excel(name = "支付时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date paymentTime;
 
+    private String paymentMethod;
+
     /** 支付金额 */
     @Excel(name = "支付金额")
     private BigDecimal paymentAmount;
 
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
     public void setId(Long id) 
     {
         this.id = id;

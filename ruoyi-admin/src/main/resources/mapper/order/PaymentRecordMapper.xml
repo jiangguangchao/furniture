@@ -14,10 +14,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="paymentMethod"    column="payment_method"    />
     </resultMap>
 
     <sql id="selectPaymentRecordVo">
-        select id, order_id, payment_time, payment_amount, create_by, create_time, update_by, update_time, remark from payment_record
+        select id, order_id, payment_time, payment_amount, payment_method, create_by, create_time, update_by, update_time, remark from payment_record
     </sql>
 
     <select id="selectPaymentRecordList" parameterType="PaymentRecord" resultMap="PaymentRecordResult">
@@ -44,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="paymentMethod != null">payment_method,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">#{orderId},</if>
@@ -54,6 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="paymentMethod != null">#{paymentMethod},</if>
          </trim>
     </insert>
 
@@ -68,6 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
         </trim>
         where id = #{id}
     </update>

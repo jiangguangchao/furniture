@@ -1,5 +1,6 @@
 package com.ruoyi.jgc.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
@@ -102,7 +103,9 @@ public class OrderDeliveryRecordServiceImpl implements IOrderDeliveryRecordServi
             workRecord.setOrderId(orderId);
             workRecord.setWorkerId(orderDeliveryRecord.getWorkerId());
             workRecord.setDeliveryId(orderDeliveryRecord.getId());
-            workRecord.setSalary(userService.selectUserById(orderDeliveryRecord.getWorkerId()).getSalary());//从员工信息中获取工资
+
+            BigDecimal salary = userService.selectUserById(orderDeliveryRecord.getWorkerId()).getSalary();
+            workRecord.setSalary(salary);//从员工信息中获取工资
 
             Date deliveryTime = orderDeliveryRecord.getDeliveryTime();
             if (deliveryTime == null) {
