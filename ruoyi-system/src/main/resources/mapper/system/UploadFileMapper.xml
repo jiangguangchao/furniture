@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.UploadFileMapper">
+    
+    <resultMap type="UploadFile" id="UploadFileResult">
+        <result property="id"    column="id"    />
+        <result property="associationId"    column="association_id"    />
+        <result property="associationType"    column="association_type"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectUploadFileVo">
+        select id, association_id, association_type, file_type, file_name, file_path, create_by, create_time from upload_file
+    </sql>
+
+    <select id="selectUploadFileList" parameterType="UploadFile" resultMap="UploadFileResult">
+        <include refid="selectUploadFileVo"/>
+        <where>  
+            <if test="associationId != null "> and association_id = #{associationId}</if>
+            <if test="associationType != null  and associationType != ''"> and association_type = #{associationType}</if>
+            <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+        </where>
+    </select>
+    
+    <select id="selectUploadFileById" parameterType="Long" resultMap="UploadFileResult">
+        <include refid="selectUploadFileVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertUploadFile" parameterType="UploadFile" useGeneratedKeys="true" keyProperty="id">
+        insert into upload_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="associationId != null">association_id,</if>
+            <if test="associationType != null and associationType != ''">association_type,</if>
+            <if test="fileType != null and fileType != ''">file_type,</if>
+            <if test="fileName != null and fileName != ''">file_name,</if>
+            <if test="filePath != null and filePath != ''">file_path,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="associationId != null">#{associationId},</if>
+            <if test="associationType != null and associationType != ''">#{associationType},</if>
+            <if test="fileType != null and fileType != ''">#{fileType},</if>
+            <if test="fileName != null and fileName != ''">#{fileName},</if>
+            <if test="filePath != null and filePath != ''">#{filePath},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUploadFile" parameterType="UploadFile">
+        update upload_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="associationId != null">association_id = #{associationId},</if>
+            <if test="associationType != null and associationType != ''">association_type = #{associationType},</if>
+            <if test="fileType != null and fileType != ''">file_type = #{fileType},</if>
+            <if test="fileName != null and fileName != ''">file_name = #{fileName},</if>
+            <if test="filePath != null and filePath != ''">file_path = #{filePath},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUploadFileById" parameterType="Long">
+        delete from upload_file where id = #{id}
+    </delete>
+
+    <delete id="deleteUploadFileByIds" parameterType="String">
+        delete from upload_file where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

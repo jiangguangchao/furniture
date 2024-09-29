@@ -44,7 +44,7 @@ public class PurchaseOrder extends BaseEntity
 
     /** 货单 */
     @Excel(name = "货单")
-    private String orderList;
+    private String goodsList;
 
     /** 总金额 */
     @Excel(name = "总金额")
@@ -108,14 +108,14 @@ public class PurchaseOrder extends BaseEntity
     {
         return weichat;
     }
-    public void setOrderList(String orderList) 
+    public void setGoodsList(String orderList) 
     {
-        this.orderList = orderList;
+        this.goodsList = orderList;
     }
 
-    public String getOrderList() 
+    public String getGoodsList() 
     {
-        return orderList;
+        return goodsList;
     }
     public void setTotalAmount(BigDecimal totalAmount) 
     {
@@ -145,7 +145,7 @@ public class PurchaseOrder extends BaseEntity
             .append("arrivalStatus", getArrivalStatus())
             .append("phone", getPhone())
             .append("weichat", getWeichat())
-            .append("orderList", getOrderList())
+            .append("goodsList", getGoodsList())
             .append("totalAmount", getTotalAmount())
             .append("remarks", getRemarks())
             .toString();

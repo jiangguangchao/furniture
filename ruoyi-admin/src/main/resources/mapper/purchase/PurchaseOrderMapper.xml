@@ -11,13 +11,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="arrivalStatus"    column="arrival_status"    />
         <result property="phone"    column="phone"    />
         <result property="weichat"    column="weichat"    />
-        <result property="orderList"    column="order_list"    />
+        <result property="goodsList"    column="goods_list"    />
         <result property="totalAmount"    column="total_amount"    />
         <result property="remarks"    column="remarks"    />
     </resultMap>
 
     <sql id="selectPurchaseOrderVo">
-        select id, supplier, purchase_date, arrival_status, phone, weichat, order_list, total_amount, remarks from purchase_order
+        select id, supplier, purchase_date, arrival_status, phone, weichat, goods_list, total_amount, remarks from purchase_order
     </sql>
 
     <select id="selectPurchaseOrderList" parameterType="PurchaseOrder" resultMap="PurchaseOrderResult">
@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="arrivalStatus != null and arrivalStatus != ''">arrival_status,</if>
             <if test="phone != null">phone,</if>
             <if test="weichat != null">weichat,</if>
-            <if test="orderList != null">order_list,</if>
+            <if test="goodsList != null">goods_list,</if>
             <if test="totalAmount != null">total_amount,</if>
             <if test="remarks != null">remarks,</if>
          </trim>
@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="arrivalStatus != null and arrivalStatus != ''">#{arrivalStatus},</if>
             <if test="phone != null">#{phone},</if>
             <if test="weichat != null">#{weichat},</if>
-            <if test="orderList != null">#{orderList},</if>
+            <if test="goodsList != null">#{goodsList},</if>
             <if test="totalAmount != null">#{totalAmount},</if>
             <if test="remarks != null">#{remarks},</if>
          </trim>
@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="arrivalStatus != null and arrivalStatus != ''">arrival_status = #{arrivalStatus},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="weichat != null">weichat = #{weichat},</if>
-            <if test="orderList != null">order_list = #{orderList},</if>
+            <if test="goodsList != null">goods_list = #{goodsList},</if>
             <if test="totalAmount != null">total_amount = #{totalAmount},</if>
             <if test="remarks != null">remarks = #{remarks},</if>
         </trim>
