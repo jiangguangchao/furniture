@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OrderStatisticsMapper">
+    
+    <resultMap type="OrderStatistics" id="OrderStatisticsResult">
+        <result property="id"    column="id"    />
+        <result property="statcDate"    column="statc_date"    />
+        <result property="dateType"    column="date_type"    />
+        <result property="dataType"    column="data_type"    />
+        <result property="statcValue"    column="statc_value"    />
+    </resultMap>
+
+    <sql id="selectOrderStatisticsVo">
+        select id, statc_date, date_type, data_type, statc_value from order_statistics
+    </sql>
+
+    <select id="selectOrderStatisticsList" parameterType="OrderStatistics" resultMap="OrderStatisticsResult">
+        <include refid="selectOrderStatisticsVo"/>
+        <where>  
+            <if test="statcDate != null  and statcDate != ''"> and statc_date = #{statcDate}</if>
+            <if test="dateType != null  and dateType != ''"> and date_type = #{dateType}</if>
+            <if test="dataType != null  and dataType != ''"> and data_type = #{dataType}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderStatisticsById" parameterType="Long" resultMap="OrderStatisticsResult">
+        <include refid="selectOrderStatisticsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOrderStatistics" parameterType="OrderStatistics" useGeneratedKeys="true" keyProperty="id">
+        insert into order_statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="statcDate != null and statcDate != ''">statc_date,</if>
+            <if test="dateType != null and dateType != ''">date_type,</if>
+            <if test="dataType != null and dataType != ''">data_type,</if>
+            <if test="statcValue != null">statc_value,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="statcDate != null and statcDate != ''">#{statcDate},</if>
+            <if test="dateType != null and dateType != ''">#{dateType},</if>
+            <if test="dataType != null and dataType != ''">#{dataType},</if>
+            <if test="statcValue != null">#{statcValue},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderStatistics" parameterType="OrderStatistics">
+        update order_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="statcDate != null and statcDate != ''">statc_date = #{statcDate},</if>
+            <if test="dateType != null and dateType != ''">date_type = #{dateType},</if>
+            <if test="dataType != null and dataType != ''">data_type = #{dataType},</if>
+            <if test="statcValue != null">statc_value = #{statcValue},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderStatisticsById" parameterType="Long">
+        delete from order_statistics where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderStatisticsByIds" parameterType="String">
+        delete from order_statistics where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

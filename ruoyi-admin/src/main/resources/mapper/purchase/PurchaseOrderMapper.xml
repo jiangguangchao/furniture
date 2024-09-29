@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jgc.mapper.PurchaseOrderMapper">
+    
+    <resultMap type="PurchaseOrder" id="PurchaseOrderResult">
+        <result property="id"    column="id"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="purchaseDate"    column="purchase_date"    />
+        <result property="arrivalStatus"    column="arrival_status"    />
+        <result property="phone"    column="phone"    />
+        <result property="weichat"    column="weichat"    />
+        <result property="orderList"    column="order_list"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="remarks"    column="remarks"    />
+    </resultMap>
+
+    <sql id="selectPurchaseOrderVo">
+        select id, supplier, purchase_date, arrival_status, phone, weichat, order_list, total_amount, remarks from purchase_order
+    </sql>
+
+    <select id="selectPurchaseOrderList" parameterType="PurchaseOrder" resultMap="PurchaseOrderResult">
+        <include refid="selectPurchaseOrderVo"/>
+        <where>  
+            <if test="params.beginPurchaseDate != null and params.beginPurchaseDate != '' and params.endPurchaseDate != null and params.endPurchaseDate != ''"> and purchase_date between #{params.beginPurchaseDate} and #{params.endPurchaseDate}</if>
+            <if test="arrivalStatus != null  and arrivalStatus != ''"> and arrival_status = #{arrivalStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectPurchaseOrderById" parameterType="Long" resultMap="PurchaseOrderResult">
+        <include refid="selectPurchaseOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPurchaseOrder" parameterType="PurchaseOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into purchase_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supplier != null and supplier != ''">supplier,</if>
+            <if test="purchaseDate != null">purchase_date,</if>
+            <if test="arrivalStatus != null and arrivalStatus != ''">arrival_status,</if>
+            <if test="phone != null">phone,</if>
+            <if test="weichat != null">weichat,</if>
+            <if test="orderList != null">order_list,</if>
+            <if test="totalAmount != null">total_amount,</if>
+            <if test="remarks != null">remarks,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supplier != null and supplier != ''">#{supplier},</if>
+            <if test="purchaseDate != null">#{purchaseDate},</if>
+            <if test="arrivalStatus != null and arrivalStatus != ''">#{arrivalStatus},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="weichat != null">#{weichat},</if>
+            <if test="orderList != null">#{orderList},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
+            <if test="remarks != null">#{remarks},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePurchaseOrder" parameterType="PurchaseOrder">
+        update purchase_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supplier != null and supplier != ''">supplier = #{supplier},</if>
+            <if test="purchaseDate != null">purchase_date = #{purchaseDate},</if>
+            <if test="arrivalStatus != null and arrivalStatus != ''">arrival_status = #{arrivalStatus},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="weichat != null">weichat = #{weichat},</if>
+            <if test="orderList != null">order_list = #{orderList},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePurchaseOrderById" parameterType="Long">
+        delete from purchase_order where id = #{id}
+    </delete>
+
+    <delete id="deletePurchaseOrderByIds" parameterType="String">
+        delete from purchase_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
