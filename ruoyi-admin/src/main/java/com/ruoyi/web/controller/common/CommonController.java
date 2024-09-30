@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.common;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,11 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.ServerConfig;
+import com.ruoyi.system.domain.UploadFile;
+import com.ruoyi.system.service.IUploadFileService;
 
 /**
  * 通用请求处理
@@ -28,12 +32,14 @@ import com.ruoyi.framework.config.ServerConfig;
  */
 @RestController
 @RequestMapping("/common")
-public class CommonController
+public class CommonController extends BaseController
 {
     private static final Logger log = LoggerFactory.getLogger(CommonController.class);
 
     @Autowired
     private ServerConfig serverConfig;
+    @Autowired
+    private IUploadFileService uploadFileService;
 
     private static final String FILE_DELIMETER = ",";
 
@@ -87,6 +93,8 @@ public class CommonController
             ajax.put("fileName", fileName);
             ajax.put("newFileName", FileUtils.getName(fileName));
             ajax.put("originalFilename", file.getOriginalFilename());
+
+            addFileRecord(fileName, getUsername());
             return ajax;
         }
         catch (Exception e)
@@ -118,6 +126,7 @@ public class CommonController
                 fileNames.add(fileName);
                 newFileNames.add(FileUtils.getName(fileName));
                 originalFilenames.add(file.getOriginalFilename());
+                addFileRecord(fileName, getUsername());
             }
             AjaxResult ajax = AjaxResult.success();
             ajax.put("urls", StringUtils.join(urls, FILE_DELIMETER));
@@ -159,5 +168,17 @@ public class CommonController
         {
             log.error("下载文件失败", e);
         }
+    }
+
+    public void addFileRecord(String filePath, String createBy) {
+        String fileName = FileUtils.getName(filePath);
+        String fileId = FileUtils.getNameNotSuffix(filePath);
+        UploadFile uploadFile = new UploadFile();
+        uploadFile.setId(fileId);
+        uploadFile.setFileName(fileName);
+        uploadFile.setFilePath(filePath);
+        uploadFile.setCreateBy(createBy);
+        uploadFile.setCreateTime(new Date());
+        uploadFileService.insertUploadFile(uploadFile);
     }
 }

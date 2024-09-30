@@ -16,7 +16,7 @@ public class UploadFile extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private String id;
 
     /** 关联id */
     @Excel(name = "关联id")
@@ -38,12 +38,12 @@ public class UploadFile extends BaseEntity
     @Excel(name = "文件路径")
     private String filePath;
 
-    public void setId(Long id) 
+    public void setId(String id) 
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public String getId() 
     {
         return id;
     }
