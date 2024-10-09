@@ -15,10 +15,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
         <result property="paymentMethod"    column="payment_method"    />
+        <result property="associationType"    column="association_type"    />
     </resultMap>
 
     <sql id="selectPaymentRecordVo">
-        select id, order_id, payment_time, payment_amount, payment_method, create_by, create_time, update_by, update_time, remark from payment_record
+        select id, order_id, payment_time, payment_amount, payment_method, create_by, create_time, 
+            update_by, update_time, remark, association_type
+        from payment_record
     </sql>
 
     <select id="selectPaymentRecordList" parameterType="PaymentRecord" resultMap="PaymentRecordResult">
@@ -26,6 +29,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="id != null "> and id = #{id}</if>
             <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="associationType != null and associationType != ''"> and association_type = #{associationType}</if>
+"
         </where>
     </select>
     
@@ -46,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
             <if test="paymentMethod != null">payment_method,</if>
+            <if test="associationType != null and associationType != ''">association_type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">#{orderId},</if>
@@ -57,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
             <if test="paymentMethod != null">#{paymentMethod},</if>
+            <if test="associationType != null and associationType != ''">#{associationType},</if>
          </trim>
     </insert>
 
@@ -72,6 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
+            <if test="associationType != null and associationType != ''">association_type = #{associationType},</if>
         </trim>
         where id = #{id}
     </update>

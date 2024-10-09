@@ -1,6 +1,6 @@
 package com.ruoyi.jgc.domain;
 
-public enum UploadAssociationType {
+public enum AssociationType {
     PURCHASE_ORDER("PO", "进货单"),
     FURNITURE_ORDER("FO", "家具订单");
 
@@ -8,7 +8,7 @@ public enum UploadAssociationType {
     private final String desc;
 
     // 构造函数
-    UploadAssociationType(String code, String desc) {
+    AssociationType(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -24,8 +24,8 @@ public enum UploadAssociationType {
     }
 
     // 根据code获取对应的枚举对象
-    public static UploadAssociationType fromCode(String code) {
-        for (UploadAssociationType type : UploadAssociationType.values()) {
+    public static AssociationType fromCode(String code) {
+        for (AssociationType type : AssociationType.values()) {
             if (type.getCode().equals(code)) {
                 return type;
             }

@@ -37,6 +37,10 @@ public class PaymentRecord extends BaseEntity
     @Excel(name = "支付金额")
     private BigDecimal paymentAmount;
 
+    /** 关联类型 */
+    @Excel(name = "关联类型")
+    private String associationType;
+
     public String getPaymentMethod() {
         return paymentMethod;
     }
@@ -80,6 +84,15 @@ public class PaymentRecord extends BaseEntity
     {
         return paymentAmount;
     }
+
+    public void setAssociationType (String associationType) {
+        this.associationType = associationType;
+    }
+
+    public String getAssociationType () {
+        return associationType;
+    }
+    
 
     @Override
     public String toString() {

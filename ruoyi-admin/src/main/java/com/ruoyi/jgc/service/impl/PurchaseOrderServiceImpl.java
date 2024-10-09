@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.PurchaseOrderMapper;
 import com.ruoyi.jgc.domain.PurchaseOrder;
-import com.ruoyi.jgc.domain.UploadAssociationType;
+import com.ruoyi.jgc.domain.AssociationType;
 import com.ruoyi.jgc.service.IPurchaseOrderService;
 import com.ruoyi.system.domain.UploadFile;
 import com.ruoyi.system.service.IUploadFileService;
@@ -53,7 +53,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
         List<PurchaseOrder> purchaseOrders = purchaseOrderMapper.selectPurchaseOrderList(purchaseOrder);
         if (CollectionUtils.isNotEmpty(purchaseOrders)) {
             UploadFile query = new UploadFile();
-            query.setAssociationType(UploadAssociationType.PURCHASE_ORDER.getCode());
+            query.setAssociationType(AssociationType.PURCHASE_ORDER.getCode());
             purchaseOrders.forEach(p -> {
                 query.setAssociationId(p.getId() + "");
                 List<UploadFile> uploadFiles = uploadFileService.selectUploadFileList(query);
@@ -79,7 +79,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
             log.info("新增进货单 本次新增图片{}张", uploadFiles.size());
             uploadFiles.forEach(uploadFile -> {
                 uploadFile.setAssociationId(purchaseOrder.getId() + "");
-                uploadFile.setAssociationType(UploadAssociationType.PURCHASE_ORDER.getCode());
+                uploadFile.setAssociationType(AssociationType.PURCHASE_ORDER.getCode());
                 uploadFileService.updateUploadFile(uploadFile);
             });
         }
@@ -102,7 +102,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
             log.info("修改进货单 本次新增图片{}张", uploadFiles.size());
             uploadFiles.forEach(uploadFile -> {
                 uploadFile.setAssociationId(purchaseOrder.getId() + "");
-                uploadFile.setAssociationType(UploadAssociationType.PURCHASE_ORDER.getCode());
+                uploadFile.setAssociationType(AssociationType.PURCHASE_ORDER.getCode());
                 uploadFileService.updateUploadFile(uploadFile);
             });
         }
