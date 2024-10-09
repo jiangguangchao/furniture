@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectUploadFileList" parameterType="UploadFile" resultMap="UploadFileResult">
         <include refid="selectUploadFileVo"/>
         <where>  
-            <if test="associationId != null "> and association_id = #{associationId}</if>
+            <if test="associationId != null and associationId != ''"> and association_id = #{associationId}</if>
             <if test="associationType != null  and associationType != ''"> and association_type = #{associationType}</if>
             <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
@@ -38,7 +38,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertUploadFile" parameterType="UploadFile" useGeneratedKeys="true" keyProperty="id">
         insert into upload_file
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="associationId != null">association_id,</if>
+            <if test="id != null">id,</if>
+            <if test="associationId != null and associationId != ''">association_id,</if>
             <if test="associationType != null and associationType != ''">association_type,</if>
             <if test="fileType != null and fileType != ''">file_type,</if>
             <if test="fileName != null and fileName != ''">file_name,</if>
@@ -47,7 +48,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="associationId != null">#{associationId},</if>
+            <if test="id != null">#{id},</if>
+            <if test="associationId != null and associationId != ''">#{associationId},</if>
             <if test="associationType != null and associationType != ''">#{associationType},</if>
             <if test="fileType != null and fileType != ''">#{fileType},</if>
             <if test="fileName != null and fileName != ''">#{fileName},</if>
@@ -60,7 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateUploadFile" parameterType="UploadFile">
         update upload_file
         <trim prefix="SET" suffixOverrides=",">
-            <if test="associationId != null">association_id = #{associationId},</if>
+            <if test="associationId != null and associationId != ''">association_id = #{associationId},</if>
             <if test="associationType != null and associationType != ''">association_type = #{associationType},</if>
             <if test="fileType != null and fileType != ''">file_type = #{fileType},</if>
             <if test="fileName != null and fileName != ''">file_name = #{fileName},</if>
@@ -71,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteUploadFileById" parameterType="Long">
+    <delete id="deleteUploadFileById" parameterType="String">
         delete from upload_file where id = #{id}
     </delete>
 

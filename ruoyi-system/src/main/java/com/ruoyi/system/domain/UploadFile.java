@@ -20,7 +20,7 @@ public class UploadFile extends BaseEntity
 
     /** 关联id */
     @Excel(name = "关联id")
-    private Long associationId;
+    private String associationId;
 
     /** 关联类型 */
     @Excel(name = "关联类型")
@@ -47,12 +47,12 @@ public class UploadFile extends BaseEntity
     {
         return id;
     }
-    public void setAssociationId(Long associationId) 
+    public void setAssociationId(String associationId) 
     {
         this.associationId = associationId;
     }
 
-    public Long getAssociationId() 
+    public String getAssociationId() 
     {
         return associationId;
     }

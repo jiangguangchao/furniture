@@ -17,7 +17,7 @@ public interface UploadFileMapper
      * @param id 上传文件主键
      * @return 上传文件
      */
-    public UploadFile selectUploadFileById(Long id);
+    public UploadFile selectUploadFileById(String id);
 
     /**
      * 查询上传文件列表
@@ -49,7 +49,7 @@ public interface UploadFileMapper
      * @param id 上传文件主键
      * @return 结果
      */
-    public int deleteUploadFileById(Long id);
+    public int deleteUploadFileById(String id);
 
     /**
      * 批量删除上传文件
@@ -57,5 +57,5 @@ public interface UploadFileMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteUploadFileByIds(Long[] ids);
+    public int deleteUploadFileByIds(String[] ids);
 }

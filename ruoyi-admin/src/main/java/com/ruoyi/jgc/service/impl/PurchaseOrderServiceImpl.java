@@ -1,11 +1,17 @@
 package com.ruoyi.jgc.service.impl;
 
 import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.PurchaseOrderMapper;
 import com.ruoyi.jgc.domain.PurchaseOrder;
+import com.ruoyi.jgc.domain.UploadAssociationType;
 import com.ruoyi.jgc.service.IPurchaseOrderService;
+import com.ruoyi.system.domain.UploadFile;
+import com.ruoyi.system.service.IUploadFileService;
 
 /**
  * 进货单Service业务层处理
@@ -18,6 +24,10 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
 {
     @Autowired
     private PurchaseOrderMapper purchaseOrderMapper;
+    @Autowired
+    private IUploadFileService  uploadFileService;
+
+    Logger log = org.slf4j.LoggerFactory.getLogger(PurchaseOrderServiceImpl.class);
 
     /**
      * 查询进货单
@@ -40,7 +50,17 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
     @Override
     public List<PurchaseOrder> selectPurchaseOrderList(PurchaseOrder purchaseOrder)
     {
-        return purchaseOrderMapper.selectPurchaseOrderList(purchaseOrder);
+        List<PurchaseOrder> purchaseOrders = purchaseOrderMapper.selectPurchaseOrderList(purchaseOrder);
+        if (CollectionUtils.isNotEmpty(purchaseOrders)) {
+            UploadFile query = new UploadFile();
+            query.setAssociationType(UploadAssociationType.PURCHASE_ORDER.getCode());
+            purchaseOrders.forEach(p -> {
+                query.setAssociationId(p.getId() + "");
+                List<UploadFile> uploadFiles = uploadFileService.selectUploadFileList(query);
+                p.setUploadFiles(uploadFiles);
+            });
+        }
+        return purchaseOrders;
     }
 
     /**
@@ -52,7 +72,18 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
     @Override
     public int insertPurchaseOrder(PurchaseOrder purchaseOrder)
     {
-        return purchaseOrderMapper.insertPurchaseOrder(purchaseOrder);
+        int result = purchaseOrderMapper.insertPurchaseOrder(purchaseOrder);
+        //更新上传文件记录
+        List<UploadFile> uploadFiles = purchaseOrder.getUploadFiles();
+        if (CollectionUtils.isNotEmpty(uploadFiles)) {
+            log.info("新增进货单 本次新增图片{}张", uploadFiles.size());
+            uploadFiles.forEach(uploadFile -> {
+                uploadFile.setAssociationId(purchaseOrder.getId() + "");
+                uploadFile.setAssociationType(UploadAssociationType.PURCHASE_ORDER.getCode());
+                uploadFileService.updateUploadFile(uploadFile);
+            });
+        }
+        return result;
     }
 
     /**
@@ -64,7 +95,19 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
     @Override
     public int updatePurchaseOrder(PurchaseOrder purchaseOrder)
     {
-        return purchaseOrderMapper.updatePurchaseOrder(purchaseOrder);
+        int result = purchaseOrderMapper.updatePurchaseOrder(purchaseOrder);
+        //更新上传文件记录
+        List<UploadFile> uploadFiles = purchaseOrder.getUploadFiles();
+        if (CollectionUtils.isNotEmpty(uploadFiles)) {
+            log.info("修改进货单 本次新增图片{}张", uploadFiles.size());
+            uploadFiles.forEach(uploadFile -> {
+                uploadFile.setAssociationId(purchaseOrder.getId() + "");
+                uploadFile.setAssociationType(UploadAssociationType.PURCHASE_ORDER.getCode());
+                uploadFileService.updateUploadFile(uploadFile);
+            });
+        }
+
+        return result;
     }
 
     /**

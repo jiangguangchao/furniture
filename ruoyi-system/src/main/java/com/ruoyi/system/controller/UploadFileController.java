@@ -72,7 +72,7 @@ public class UploadFileController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:file:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id) {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return success(uploadFileService.selectUploadFileById(id));
     }
 
@@ -102,7 +102,7 @@ public class UploadFileController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:file:remove')")
     @Log(title = "上传文件", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids) {
+    public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(uploadFileService.deleteUploadFileByIds(ids));
     }
 

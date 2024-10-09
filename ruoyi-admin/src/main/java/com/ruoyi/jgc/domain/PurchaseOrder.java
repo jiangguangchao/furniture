@@ -2,11 +2,14 @@ package com.ruoyi.jgc.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.system.domain.UploadFile;
 
 /**
  * 进货单对象 purchase_order
@@ -53,6 +56,8 @@ public class PurchaseOrder extends BaseEntity
     /** 备注 */
     @Excel(name = "备注")
     private String remarks;
+
+    private List<UploadFile> uploadFiles;
 
     public void setId(Long id) 
     {
@@ -134,6 +139,14 @@ public class PurchaseOrder extends BaseEntity
     public String getRemarks() 
     {
         return remarks;
+    }
+
+    public List<UploadFile> getUploadFiles() {
+        return uploadFiles;
+    }
+
+    public void setUploadFiles(List<UploadFile> uploadFiles) {
+        this.uploadFiles = uploadFiles;
     }
 
     @Override

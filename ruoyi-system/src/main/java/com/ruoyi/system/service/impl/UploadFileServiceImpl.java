@@ -27,7 +27,7 @@ public class UploadFileServiceImpl implements IUploadFileService
      * @return 上传文件
      */
     @Override
-    public UploadFile selectUploadFileById(Long id)
+    public UploadFile selectUploadFileById(String id)
     {
         return uploadFileMapper.selectUploadFileById(id);
     }
@@ -76,7 +76,7 @@ public class UploadFileServiceImpl implements IUploadFileService
      * @return 结果
      */
     @Override
-    public int deleteUploadFileByIds(Long[] ids)
+    public int deleteUploadFileByIds(String[] ids)
     {
         return uploadFileMapper.deleteUploadFileByIds(ids);
     }
@@ -88,7 +88,7 @@ public class UploadFileServiceImpl implements IUploadFileService
      * @return 结果
      */
     @Override
-    public int deleteUploadFileById(Long id)
+    public int deleteUploadFileById(String id)
     {
         return uploadFileMapper.deleteUploadFileById(id);
     }

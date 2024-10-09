@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +41,8 @@ public class CommonController extends BaseController
     private ServerConfig serverConfig;
     @Autowired
     private IUploadFileService uploadFileService;
+    @Autowired
+    private RuoYiConfig ruoyiConfig;
 
     private static final String FILE_DELIMETER = ",";
 
@@ -79,10 +82,11 @@ public class CommonController extends BaseController
      * 通用上传请求（单个）
      */
     @PostMapping("/upload")
-    public AjaxResult uploadFile(MultipartFile file) throws Exception
+    public AjaxResult uploadFile(MultipartFile file, String associationId, String associationType) throws Exception
     {
         try
         {
+            logger.info("关联数据 {} {}",associationId, associationType);
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
             // 上传并返回新文件名称
@@ -94,11 +98,12 @@ public class CommonController extends BaseController
             ajax.put("newFileName", FileUtils.getName(fileName));
             ajax.put("originalFilename", file.getOriginalFilename());
 
-            addFileRecord(fileName, getUsername());
+            addFileRecord(fileName, getUsername(), associationId, associationType);
             return ajax;
         }
         catch (Exception e)
         {
+            log.error("上传文件失败", e);
             return AjaxResult.error(e.getMessage());
         }
     }
@@ -107,7 +112,7 @@ public class CommonController extends BaseController
      * 通用上传请求（多个）
      */
     @PostMapping("/uploads")
-    public AjaxResult uploadFiles(List<MultipartFile> files) throws Exception
+    public AjaxResult uploadFiles(List<MultipartFile> files, String associationId, String associationType) throws Exception
     {
         try
         {
@@ -126,7 +131,7 @@ public class CommonController extends BaseController
                 fileNames.add(fileName);
                 newFileNames.add(FileUtils.getName(fileName));
                 originalFilenames.add(file.getOriginalFilename());
-                addFileRecord(fileName, getUsername());
+                addFileRecord(fileName, getUsername(), associationId, associationType);
             }
             AjaxResult ajax = AjaxResult.success();
             ajax.put("urls", StringUtils.join(urls, FILE_DELIMETER));
@@ -137,8 +142,41 @@ public class CommonController extends BaseController
         }
         catch (Exception e)
         {
+            log.error("上传多文件失败", e);
             return AjaxResult.error(e.getMessage());
         }
+    }
+
+    /**
+     * 删除上传文件。这里的path实际上就是文件的url。数据库没有单独存储文件的磁盘存储路径，
+     * 但是可以从url中解析出来。就是将路径中的profile替换为配置的profile。
+     * 例如数据库中保存的路径（实际上是url）是/profile/upload/2024/10/08/20241008175506A001.png。
+     * profile配置的磁盘地址是D:/ruoyi/uploadPath。那么实际上要删除的文件路径就是D:/ruoyi/uploadPath/upload/2024/10/08/20241008175506A001.png。
+     * 路径中的文件名称20241008175506A001.png ，其中20241008175506A001就是文件上传记录表中的id，可以根据id删除文件上传记录
+     * @param filePaths
+     * @return
+     */
+    @PostMapping("/deleteFiles")
+    public AjaxResult deleteUploadFile(@RequestBody List<String> filePaths) {
+        try {
+            logger.info("删除文件：{}", filePaths);
+            for (String filePath : filePaths) {
+                String fullPath = filePath.replace("/profile", ruoyiConfig.getProfile());//磁盘地址
+                if (FileUtils.deleteFile(fullPath)) {
+                    logger.info("删除文件成功 路径:{}" , fullPath);
+                } else {
+                    logger.error("删除文件失败 路径:{}" , fullPath);
+                }
+                //删除文件上传记录
+                String id = FileUtils.getNameNotSuffix(filePath);
+                uploadFileService.deleteUploadFileById(id);
+            }
+            return AjaxResult.success();
+        } catch (Exception e) {
+            log.error("删除文件失败", e);
+            return AjaxResult.error(e.getMessage());
+        }
+
     }
 
     /**
@@ -170,7 +208,7 @@ public class CommonController extends BaseController
         }
     }
 
-    public void addFileRecord(String filePath, String createBy) {
+    public void addFileRecord(String filePath, String createBy, String associationId, String associationType) {
         String fileName = FileUtils.getName(filePath);
         String fileId = FileUtils.getNameNotSuffix(filePath);
         UploadFile uploadFile = new UploadFile();
@@ -179,6 +217,10 @@ public class CommonController extends BaseController
         uploadFile.setFilePath(filePath);
         uploadFile.setCreateBy(createBy);
         uploadFile.setCreateTime(new Date());
+        if (StringUtils.isNotEmpty(associationId)) {
+            uploadFile.setAssociationId(associationId);
+            uploadFile.setAssociationType(associationType);
+        }
         uploadFileService.insertUploadFile(uploadFile);
     }
 }
