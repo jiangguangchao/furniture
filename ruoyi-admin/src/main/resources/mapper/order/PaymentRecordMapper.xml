@@ -30,7 +30,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null "> and id = #{id}</if>
             <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
             <if test="associationType != null and associationType != ''"> and association_type = #{associationType}</if>
-"
         </where>
     </select>
     

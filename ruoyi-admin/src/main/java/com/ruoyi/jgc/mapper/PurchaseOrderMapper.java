@@ -17,7 +17,7 @@ public interface PurchaseOrderMapper
      * @param id 进货单主键
      * @return 进货单
      */
-    public PurchaseOrder selectPurchaseOrderById(Long id);
+    public PurchaseOrder selectPurchaseOrderById(String id);
 
     /**
      * 查询进货单列表
@@ -49,7 +49,7 @@ public interface PurchaseOrderMapper
      * @param id 进货单主键
      * @return 结果
      */
-    public int deletePurchaseOrderById(Long id);
+    public int deletePurchaseOrderById(String id);
 
     /**
      * 批量删除进货单
@@ -57,5 +57,5 @@ public interface PurchaseOrderMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePurchaseOrderByIds(Long[] ids);
+    public int deletePurchaseOrderByIds(String[] ids);
 }

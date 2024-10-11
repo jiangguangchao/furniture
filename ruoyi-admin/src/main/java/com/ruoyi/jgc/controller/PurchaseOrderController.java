@@ -64,7 +64,7 @@ public class PurchaseOrderController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('purchase:purchaseOrder:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return success(purchaseOrderService.selectPurchaseOrderById(id));
     }
@@ -97,7 +97,7 @@ public class PurchaseOrderController extends BaseController
     @PreAuthorize("@ss.hasPermi('purchase:purchaseOrder:remove')")
     @Log(title = "进货单", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(purchaseOrderService.deletePurchaseOrderByIds(ids));
     }

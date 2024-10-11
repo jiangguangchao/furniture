@@ -14,10 +14,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="goodsList"    column="goods_list"    />
         <result property="totalAmount"    column="total_amount"    />
         <result property="remarks"    column="remarks"    />
+        <result property="paidMoney"    column="paid_money" />
+        <result property="paymentStatus"    column="payment_status" />
+        <result property="status"    column="status" />
     </resultMap>
 
     <sql id="selectPurchaseOrderVo">
-        select id, supplier, purchase_date, arrival_status, phone, weichat, goods_list, total_amount, remarks from purchase_order
+        select id, supplier, purchase_date, arrival_status, phone, weichat, goods_list, total_amount, 
+            remarks, paid_money, payment_status, status
+        from purchase_order
     </sql>
 
     <select id="selectPurchaseOrderList" parameterType="PurchaseOrder" resultMap="PurchaseOrderResult">
@@ -25,10 +30,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="params.beginPurchaseDate != null and params.beginPurchaseDate != '' and params.endPurchaseDate != null and params.endPurchaseDate != ''"> and purchase_date between #{params.beginPurchaseDate} and #{params.endPurchaseDate}</if>
             <if test="arrivalStatus != null  and arrivalStatus != ''"> and arrival_status = #{arrivalStatus}</if>
+            <if test="paymentStatus != null  and paymentStatus != ''"> and payment_status = #{paymentStatus}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
     
-    <select id="selectPurchaseOrderById" parameterType="Long" resultMap="PurchaseOrderResult">
+    <select id="selectPurchaseOrderById" parameterType="String" resultMap="PurchaseOrderResult">
         <include refid="selectPurchaseOrderVo"/>
         where id = #{id}
     </select>
@@ -44,6 +51,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="goodsList != null">goods_list,</if>
             <if test="totalAmount != null">total_amount,</if>
             <if test="remarks != null">remarks,</if>
+            <if test="paidMoney != null">paid_money,</if>
+            <if test="paymentStatus != null">payment_status,</if>
+            <if test="status != null">status,</if>
+
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="supplier != null and supplier != ''">#{supplier},</if>
@@ -54,6 +65,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="goodsList != null">#{goodsList},</if>
             <if test="totalAmount != null">#{totalAmount},</if>
             <if test="remarks != null">#{remarks},</if>
+            <if test="paidMoney != null">#{paidMoney},</if>
+            <if test="paymentStatus != null">#{paymentStatus},</if>
+            <if test="status != null">#{status},</if>
          </trim>
     </insert>
 
@@ -63,16 +77,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="supplier != null and supplier != ''">supplier = #{supplier},</if>
             <if test="purchaseDate != null">purchase_date = #{purchaseDate},</if>
             <if test="arrivalStatus != null and arrivalStatus != ''">arrival_status = #{arrivalStatus},</if>
-            <if test="phone != null">phone = #{phone},</if>
-            <if test="weichat != null">weichat = #{weichat},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="weichat != null and weichat != ''">weichat = #{weichat},</if>
             <if test="goodsList != null">goods_list = #{goodsList},</if>
             <if test="totalAmount != null">total_amount = #{totalAmount},</if>
-            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="remarks != null and remarks != ''">remarks = #{remarks},</if>
+            <if test="paidMoney != null">paid_money = #{paidMoney},</if>
+            <if test="paymentStatus != null and paymentStatus != ''">payment_status = #{paymentStatus},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deletePurchaseOrderById" parameterType="Long">
+    <delete id="deletePurchaseOrderById" parameterType="String">
         delete from purchase_order where id = #{id}
     </delete>
 

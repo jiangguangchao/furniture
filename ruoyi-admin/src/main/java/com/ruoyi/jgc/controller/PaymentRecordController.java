@@ -103,6 +103,6 @@ public class PaymentRecordController extends BaseController
 	@DeleteMapping("/delete")
     public AjaxResult remove(PaymentRecord paymentRecord)
     {
-        return toAjax(paymentRecordService.deletePaymentRecordById(paymentRecord.getId(), paymentRecord.getOrderId()));
+        return toAjax(paymentRecordService.deletePaymentRecordById(paymentRecord));
     }
 }

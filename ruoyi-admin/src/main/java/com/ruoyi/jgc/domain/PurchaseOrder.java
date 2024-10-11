@@ -22,7 +22,7 @@ public class PurchaseOrder extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 编号 */
-    private Long id;
+    private String id;
 
     /** 供货方 */
     @Excel(name = "供货方")
@@ -36,6 +36,10 @@ public class PurchaseOrder extends BaseEntity
     /** 到货状态 */
     @Excel(name = "到货状态")
     private String arrivalStatus;
+
+    private String status;
+
+    private String paymentStatus;
 
     /** 手机 */
     @Excel(name = "手机")
@@ -53,18 +57,20 @@ public class PurchaseOrder extends BaseEntity
     @Excel(name = "总金额")
     private BigDecimal totalAmount;
 
+    private BigDecimal paidMoney;
+
     /** 备注 */
     @Excel(name = "备注")
     private String remarks;
 
     private List<UploadFile> uploadFiles;
 
-    public void setId(Long id) 
+    public void setId(String id) 
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public String getId() 
     {
         return id;
     }
@@ -147,6 +153,30 @@ public class PurchaseOrder extends BaseEntity
 
     public void setUploadFiles(List<UploadFile> uploadFiles) {
         this.uploadFiles = uploadFiles;
+    }
+
+    public BigDecimal getPaidMoney() {
+        return paidMoney;
+    }
+
+    public void setPaidMoney(BigDecimal paidMoney) {
+        this.paidMoney = paidMoney;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 
     @Override

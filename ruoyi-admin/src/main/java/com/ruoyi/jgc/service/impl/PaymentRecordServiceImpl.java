@@ -9,10 +9,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.PaymentRecordMapper;
+import com.ruoyi.jgc.domain.AssociationType;
 import com.ruoyi.jgc.domain.FurnitureOrder;
 import com.ruoyi.jgc.domain.PaymentRecord;
 import com.ruoyi.jgc.service.IFurnitureOrderService;
 import com.ruoyi.jgc.service.IPaymentRecordService;
+import com.ruoyi.jgc.service.IPurchaseOrderService;
 
 /**
  * 支付记录Service业务层处理
@@ -27,7 +29,9 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
     private PaymentRecordMapper paymentRecordMapper;
 
     @Autowired
-    private IFurnitureOrderService orderService;
+    private IFurnitureOrderService furnitureOrderService;
+    @Autowired
+    private IPurchaseOrderService purchaseOrderService;
 
     /**
      * 查询支付记录
@@ -63,7 +67,7 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
     public int insertPaymentRecord(PaymentRecord paymentRecord)
     {
         int result = paymentRecordMapper.insertPaymentRecord(paymentRecord);
-        updateOrderPayment(paymentRecord.getOrderId());
+        updateOrderPayment(paymentRecord);
         return result;
     }
 
@@ -81,7 +85,8 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
         //不需要修改订单编号。如果订单编号错误可以直接删除配送记录。新增正确的记录
         paymentRecord.setOrderId(null);
         int result = paymentRecordMapper.updatePaymentRecord(paymentRecord);
-        updateOrderPayment(orderId);
+        paymentRecord.setOrderId(orderId);
+        updateOrderPayment(paymentRecord);
         return result;
     }
 
@@ -104,10 +109,10 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
      * @return 结果
      */
     @Override
-    public int deletePaymentRecordById(Long id, String orderId)
+    public int deletePaymentRecordById(PaymentRecord paymentRecord)
     {
-        int result = paymentRecordMapper.deletePaymentRecordById(id);
-        updateOrderPayment(orderId);
+        int result = paymentRecordMapper.deletePaymentRecordById(paymentRecord.getId());
+        updateOrderPayment(paymentRecord);
         return result;
 
     }
@@ -123,33 +128,24 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
      * 
      */
     @Override
-    public int updateOrderPayment(String orderId) {
-        if (StringUtils.isEmpty(orderId)) {
-            return 0;
-        }
+    public int updateOrderPayment(PaymentRecord paymentRecord) {
+        // if (StringUtils.isEmpty(orderId)) {
+        //     return 0;
+        // }
 
-        FurnitureOrder order = new FurnitureOrder();
-        order.setId(orderId);
-        order.setPaymentStatus("0");//未支付
-
-        BigDecimal payAmout = new BigDecimal(0);
+        String orderId = paymentRecord.getOrderId();
+        String associationType = paymentRecord.getAssociationType();
         PaymentRecord quRecord = new PaymentRecord();
         quRecord.setOrderId(orderId);
+        quRecord.setAssociationType(associationType);
         List<PaymentRecord> paymentRecords = paymentRecordMapper.selectPaymentRecordList(quRecord);
-        if (CollectionUtils.isNotEmpty(paymentRecords)) {
-            for (PaymentRecord paymentRecord : paymentRecords) {
-                payAmout = payAmout.add(paymentRecord.getPaymentAmount());
-            }
-
-            //已支付金额和订单金额对比
-            FurnitureOrder orderInDB = orderService.selectFurnitureOrderById(orderId);
-            if (payAmout.equals(orderInDB.getTotalMoney())) {
-                order.setPaymentStatus("2");//支付完成
-            } else {
-                order.setPaymentStatus("1");//部分支付
-            }
+        
+        if (AssociationType.FURNITURE_ORDER.getCode().equals(associationType)) {
+            return furnitureOrderService.updateOrderPayment(orderId, paymentRecords);
+        } else if (AssociationType.PURCHASE_ORDER.getCode().equals(associationType)) {
+            purchaseOrderService.updateOrderPayment(orderId, paymentRecords);
         }
-        order.setPaidMoney(payAmout);
-        return orderService.updateFurnitureOrder(order);
+        return 0;
+        
     }
 }

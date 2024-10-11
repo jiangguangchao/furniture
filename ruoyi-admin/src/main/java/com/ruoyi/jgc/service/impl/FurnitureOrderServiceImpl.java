@@ -1,11 +1,15 @@
 package com.ruoyi.jgc.service.impl;
 
 import java.util.List;
+import java.math.BigDecimal;
 import com.ruoyi.common.utils.DateUtils;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.FurnitureOrderMapper;
 import com.ruoyi.jgc.domain.FurnitureOrder;
+import com.ruoyi.jgc.domain.PaymentRecord;
 import com.ruoyi.jgc.service.IFurnitureOrderService;
 
 /**
@@ -92,5 +96,38 @@ public class FurnitureOrderServiceImpl implements IFurnitureOrderService
     public int deleteFurnitureOrderById(String id)
     {
         return furnitureOrderMapper.deleteFurnitureOrderById(id);
+    }
+
+    /**
+     * 根据支付记录修改订单中的已支付金额和支付状态
+     * @param orderId
+     * @param paymentRecords
+     * @return
+     */
+    @Override
+    public int updateOrderPayment(String orderId, List<PaymentRecord> paymentRecords) {
+        FurnitureOrder order = new FurnitureOrder();
+        order.setId(orderId);
+        order.setPaymentStatus("0");//未支付
+
+        BigDecimal payAmout = new BigDecimal(0);
+        if (CollectionUtils.isNotEmpty(paymentRecords)) {
+            for (PaymentRecord paymentRecord : paymentRecords) {
+                if (!"FO".equals(paymentRecord.getAssociationType())) {
+                    continue;
+                }
+                payAmout = payAmout.add(paymentRecord.getPaymentAmount());
+            }
+
+            //已支付金额和订单金额对比
+            FurnitureOrder orderInDB = selectFurnitureOrderById(orderId);
+            if (payAmout.equals(orderInDB.getTotalMoney())) {
+                order.setPaymentStatus("2");//支付完成
+            } else {
+                order.setPaymentStatus("1");//部分支付
+            }
+        }
+        order.setPaidMoney(payAmout);
+        return updateFurnitureOrder(order);
     }
 }
