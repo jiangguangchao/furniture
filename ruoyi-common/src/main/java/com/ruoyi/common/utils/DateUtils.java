@@ -188,4 +188,55 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
         return Date.from(zdt.toInstant());
     }
+
+    public static String getStartTime() {
+        return getStartTime(null, 0);
+    }
+
+    public static String getStartTime(String dateType, int offset) {
+        return getStartTime(null, dateType, offset, null);
+    }
+
+    /**
+     * 获取指定日期的开始时间，可以获取日，月或年的开始时间
+     * @param date
+     * @param dateType 日期类型，D:日 M:月 Y:年
+     * @param offset 相对指定时间偏移量，正数为向后偏移，负数为向前偏移，比如 -1，如果dateType为月，则表示获取上个月开始时间
+     *         如果dateType为日，则表示获取昨天开始时间
+     * @param format 返回的时间格式
+     * @return
+     */
+    public static String getStartTime(Date date, String dateType, int offset, String format) {
+        if (date == null) {
+            date = new Date();
+        }
+        if (StringUtils.isEmpty(dateType)) {
+            dateType = "D";
+        }
+        if (StringUtils.isEmpty(format)) {
+            format = "yyyy-MM-dd HH:mm:ss";
+        }
+
+        date = org.apache.commons.lang3.time.DateUtils.setHours(date, 0);
+        date = org.apache.commons.lang3.time.DateUtils.setMinutes(date, 0);
+        date = org.apache.commons.lang3.time.DateUtils.setSeconds(date, 0);
+        date = org.apache.commons.lang3.time.DateUtils.setMilliseconds(date, 0);
+        switch (dateType) {
+            case "D":
+                date = org.apache.commons.lang3.time.DateUtils.addDays(date, offset);
+                break;
+            case "M":
+                date = org.apache.commons.lang3.time.DateUtils.addMonths(date, offset);
+                date = org.apache.commons.lang3.time.DateUtils.setDays(date, 1);
+                break;
+            case "Y":
+                date = org.apache.commons.lang3.time.DateUtils.addYears(date, offset);
+                date = org.apache.commons.lang3.time.DateUtils.setDays(date, 1);
+                date = org.apache.commons.lang3.time.DateUtils.setMonths(date, 0);
+                break;
+        }
+
+        return DateUtils.parseDateToStr(format, date);
+
+    }
 }

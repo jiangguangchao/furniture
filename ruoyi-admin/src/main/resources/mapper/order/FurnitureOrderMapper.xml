@@ -33,9 +33,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectFurnitureOrderVo"/>
         <where>  
             <if test="id != null  and id != ''"> and id = #{id}</if>
-            <if test="params.beginTotalMoney != null and params.beginTotalMoney != '' and params.endTotalMoney != null and params.endTotalMoney != ''"> and total_money between #{params.beginTotalMoney} and #{params.endTotalMoney}</if>
+            <if test="params.beginTotalMoney != null and params.beginTotalMoney != '' and params.endTotalMoney != null and params.endTotalMoney != ''"> 
+                and total_money between #{params.beginTotalMoney} and #{params.endTotalMoney}
+            </if>
             <if test="orderStatus != null  and orderStatus != ''"> and order_status = #{orderStatus}</if>
-            <if test="params.beginOrderTime != null and params.beginOrderTime != '' and params.endOrderTime != null and params.endOrderTime != ''"> and order_time between #{params.beginOrderTime} and #{params.endOrderTime}</if>
+            <if test="params.beginOrderTime != null and params.beginOrderTime != '' and params.endOrderTime != null and params.endOrderTime != ''"> 
+                and order_time between #{params.beginOrderTime} and #{params.endOrderTime}
+            </if>
             <if test="orderUser != null  and orderUser != ''"> and order_user like concat('%', #{orderUser}, '%')</if>
             <if test="phoneNumber != null  and phoneNumber != ''"> and phone_number like concat('%', #{phoneNumber}, '%')</if>
             <if test="town != null  and town != ''"> and town = #{town}</if>

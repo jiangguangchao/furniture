@@ -26,7 +26,7 @@ public class OrderStatistics extends BaseEntity
     @Excel(name = "日期类型")
     private String dateType;
 
-    /** 数据类型 */
+    /** 数据类型 对应字典：order_statc_data_type 0：订单总数  1：订单总金额 2：已支付总金额*/
     @Excel(name = "数据类型")
     private String dataType;
 

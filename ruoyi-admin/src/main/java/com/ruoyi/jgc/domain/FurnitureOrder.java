@@ -29,8 +29,8 @@ public class FurnitureOrder extends BaseEntity
     @Excel(name = "已支付金额")
     private BigDecimal paidMoney;
 
-    /** 0-未开始 1-待配送 2-配送中 3-已配送 5-已完成 10-已取消 */
-    @Excel(name = "0-未开始 1-待配送 2-配送中 3-已配送 5-已完成 10-已取消")
+    /** 对应字典：order_status 1-进行中 5-已完成 9-已取消 */
+    @Excel(name = "订单状态")
     private String orderStatus;
 
     /** 下单时间 */
