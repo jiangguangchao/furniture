@@ -15,6 +15,8 @@ import com.ruoyi.jgc.domain.PaymentRecord;
 import com.ruoyi.jgc.service.IFurnitureOrderService;
 import com.ruoyi.jgc.service.IPaymentRecordService;
 import com.ruoyi.jgc.service.IPurchaseOrderService;
+import com.ruoyi.system.domain.UploadFile;
+import com.ruoyi.system.service.IUploadFileService;
 
 /**
  * 支付记录Service业务层处理
@@ -32,6 +34,8 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
     private IFurnitureOrderService furnitureOrderService;
     @Autowired
     private IPurchaseOrderService purchaseOrderService;
+    @Autowired
+    private IUploadFileService  uploadFileService;
 
     /**
      * 查询支付记录
@@ -54,7 +58,18 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
     @Override
     public List<PaymentRecord> selectPaymentRecordList(PaymentRecord paymentRecord)
     {
-        return paymentRecordMapper.selectPaymentRecordList(paymentRecord);
+        List<PaymentRecord> paymentRecords = paymentRecordMapper.selectPaymentRecordList(paymentRecord);
+        //查询附属图片
+        if (CollectionUtils.isNotEmpty(paymentRecords)) {
+            UploadFile query = new UploadFile();
+            query.setAssociationType(AssociationType.PAYMENT_RECORD.getCode());
+            paymentRecords.forEach(p -> {
+                query.setAssociationId(p.getId() + "");
+                List<UploadFile> uploadFiles = uploadFileService.selectUploadFileList(query);
+                p.setUploadFiles(uploadFiles);
+            });
+        }
+        return paymentRecords;
     }
 
     /**

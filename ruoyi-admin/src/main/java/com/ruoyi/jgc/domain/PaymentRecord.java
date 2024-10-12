@@ -2,11 +2,14 @@ package com.ruoyi.jgc.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.system.domain.UploadFile;
 
 /**
  * 支付记录对象 payment_record
@@ -40,6 +43,8 @@ public class PaymentRecord extends BaseEntity
     /** 关联类型 */
     @Excel(name = "关联类型")
     private String associationType;
+
+    private List<UploadFile> uploadFiles;
 
     public String getPaymentMethod() {
         return paymentMethod;
@@ -91,6 +96,14 @@ public class PaymentRecord extends BaseEntity
 
     public String getAssociationType () {
         return associationType;
+    }
+
+    public List<UploadFile> getUploadFiles() {
+        return uploadFiles;
+    }
+
+    public void setUploadFiles(List<UploadFile> uploadFiles) {
+        this.uploadFiles = uploadFiles;
     }
     
 

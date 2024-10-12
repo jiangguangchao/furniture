@@ -2,7 +2,8 @@ package com.ruoyi.jgc.domain;
 
 public enum AssociationType {
     PURCHASE_ORDER("PO", "进货单"),
-    FURNITURE_ORDER("FO", "家具订单");
+    FURNITURE_ORDER("FO", "家具订单"),
+    PAYMENT_RECORD("PR", "付款记录");
 
     private final String code;
     private final String desc;
