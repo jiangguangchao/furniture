@@ -31,7 +31,8 @@ public class TaskSchedule {
     
 
     //从早7点开始每半个小时执行一次今日订单统计
-    @Scheduled(cron = "0 0/30 7-21 * * ?")
+    // @Scheduled(cron = "0 0/30 7-21 * * ?")
+    @Scheduled(fixedDelay = 1000 * 60 * 3)
     public void doTodayStatistics() {
         //统计今日订单
         doStatisticsAndSave("D", DateUtils.getStartTime(), DateUtils.getStartTime("D", 1), "今日");
@@ -175,8 +176,8 @@ public class TaskSchedule {
     private List<FurnitureOrder> getFurnitureOrderByTime(String orderStartTime, String orderEndTime) {
         FurnitureOrder query = new FurnitureOrder();
         Map<String, Object> params = new HashMap();
-        params.put("orderStartTime", orderStartTime);
-        params.put("orderEndTime", orderEndTime);
+        params.put("beginOrderTime", orderStartTime);
+        params.put("endOrderTime", orderEndTime);
         query.setParams(params);
         return furnitureOrderService.selectFurnitureOrderList(query);
     }
