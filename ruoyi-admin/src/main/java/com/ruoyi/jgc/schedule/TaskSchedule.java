@@ -1,8 +1,5 @@
 package com.ruoyi.jgc.schedule;
 
-import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.poi.hpsf.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
-import com.mysql.cj.x.protobuf.MysqlxCrud.Order;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.jgc.domain.FurnitureOrder;
 import com.ruoyi.jgc.domain.OrderStatistics;
