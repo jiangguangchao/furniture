@@ -1,5 +1,6 @@
 package com.ruoyi.jgc.schedule;
 
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.poi.hpsf.Date;
 import org.slf4j.Logger;
@@ -33,31 +34,38 @@ public class TaskSchedule {
 
     Logger logger = LoggerFactory.getLogger(TaskSchedule.class);
     
-    @Scheduled(fixedDelay = 5000l)
-    public void test() {
-        System.out.println("test..............");
 
+    //从早7点开始每半个小时执行一次今日订单统计
+    @Scheduled(cron = "0 0/30 7-21 * * ?")
+    public void doTodayStatistics() {
         //统计今日订单
         doStatisticsAndSave("D", DateUtils.getStartTime(), DateUtils.getStartTime("D", 1), "今日");
-        
-        //统计昨日订单
-        doStatisticsAndSave("D", DateUtils.getStartTime("D", -1), DateUtils.getStartTime(), "昨日");
-
-        //统计本月订单
-        doStatisticsAndSave("M", DateUtils.getStartTime("M", 0), DateUtils.getStartTime("M", 1), "本月");
-
-        //统计上月订单
-        doStatisticsAndSave("M", DateUtils.getStartTime("M", -1), DateUtils.getStartTime("M", 0), "上月");
-
-        //统计今年订单
-        doStatisticsAndSave("Y", DateUtils.getStartTime("Y", 0), DateUtils.getStartTime("Y", 1), "今年");
-
-        //统计去年订单
-        doStatisticsAndSave("Y", DateUtils.getStartTime("Y", -1), DateUtils.getStartTime("Y", 0), "去年");
-
-        
     }
 
+    //每天早上10点统计昨天订单和本月订单
+    @Scheduled(cron = "0 0 10 * * ?")
+    public void doYesterdayStatistics() {
+        //统计昨日订单
+        doStatisticsAndSave("D", DateUtils.getStartTime("D", -1), DateUtils.getStartTime(), "昨日");
+        //统计本月订单
+        doStatisticsAndSave("M", DateUtils.getStartTime("M", 0), DateUtils.getStartTime("M", 1), "本月");
+    }
+
+    //每月的1号统计上月订单和今年订单
+    @Scheduled(cron = "0 0 1 1 * ?")
+    public void doLastMonthStatistics() {
+        //统计上月订单
+        doStatisticsAndSave("M", DateUtils.getStartTime("M", -1), DateUtils.getStartTime("M", 0), "上月");
+        //统计今年订单
+        doStatisticsAndSave("Y", DateUtils.getStartTime("Y", 0), DateUtils.getStartTime("Y", 1), "今年");
+    }
+
+    //每年的1到5号统计去年订单
+    @Scheduled(cron = "0 0 1 1-5 * ?")
+    public void doLastYearStatistics() {
+        //统计去年订单
+        doStatisticsAndSave("Y", DateUtils.getStartTime("Y", -1), DateUtils.getStartTime("Y", 0), "去年");
+    }
 
 
     /**
@@ -90,23 +98,46 @@ public class TaskSchedule {
             statcDate = statcDate.substring(0, 4);
         }
 
+        boolean needStatc_type0 = true;
+        boolean needStatc_type1 = true;
+        boolean needStatc_type2 = true;
+        OrderStatistics os0 = null;
+        OrderStatistics os1 = null;
+        OrderStatistics os2 = null;
+        
         OrderStatistics queryStatc = new OrderStatistics();
         queryStatc.setStatcDate(statcDate);
-        List<OrderStatistics> orderStatisticsList = orderStatisticsService.selectOrderStatisticsList(queryStatc);
-        if (CollectionUtils.isEmpty(orderStatisticsList)) {
-            
+        List<OrderStatistics> orderStatisticsListInDB = orderStatisticsService.selectOrderStatisticsList(queryStatc);
+        if (!CollectionUtils.isEmpty(orderStatisticsListInDB)) {
+            for (OrderStatistics os : orderStatisticsListInDB) {
+                if ("0".equals(os.getDataType()) && !forceStatc) {
+                    os0 = os;
+                    needStatc_type0 = false;
+                } else if ("1".equals(os.getDataType()) && !forceStatc) {
+                    needStatc_type1 = false;
+                    os1 = os;
+                } else if ("2".equals(os.getDataType()) && !forceStatc) {
+                    os2 = os;
+                    needStatc_type2 = false;
+                }
+            }
+        }
+
+        if (!needStatc_type0 && !needStatc_type1 && !needStatc_type2) {
+            logger.info("{}统计数据已存在，且当前是非强制统计，跳过本次统计", desc);
+            return;
         }
 
 
         //1.查询统计时间段内所有订单
         List<FurnitureOrder> furnitureOrderList = getFurnitureOrderByTime(orderStartTime, orderEndTime);
         if (CollectionUtils.isEmpty(furnitureOrderList)) {
-            logger.info("没有查询到{}订单，跳过统计", desc);
+            logger.info("没有查询到{}订单，跳过本次统计", desc);
             return;
         }
         furnitureOrderList.removeIf(o -> o.getOrderStatus().equals("9"));//移除状态是“已取消”的订单，已取消订单不需要统计在内
         if (CollectionUtils.isEmpty(furnitureOrderList)) {
-            logger.info("{}订单全部为“已取消”订单，跳过统计", desc);
+            logger.info("{}订单全部为“已取消”订单，跳过本次统计", desc);
             return;
         }
 
@@ -115,23 +146,34 @@ public class TaskSchedule {
         orderStatistics.setCreateBy("system");
         orderStatistics.setStatcDate(statcDate);
         
-        //订单总数
-        orderStatistics.setStatcValue(Long.valueOf(furnitureOrderList.size()));
-        orderStatistics.setDataType("0");
-        orderStatisticsService.insertOrderStatistics(orderStatistics);
+        //订单总数统计
+        doStatisticsAndSaveByType(needStatc_type0, statcDate, "0", "总数", Long.valueOf(furnitureOrderList.size()), desc, forceStatc, os0);
+        //订单总金额统计
+        doStatisticsAndSaveByType(needStatc_type1, statcDate, "1", "总金额", furnitureOrderList.stream().mapToLong(o->o.getTotalMoney().longValue()).sum(), desc, forceStatc, os1);
+        //已付款金额统计
+        doStatisticsAndSaveByType(needStatc_type2, statcDate, "2", "已付款金额", furnitureOrderList.stream().mapToLong(o->o.getPaidMoney().longValue()).sum(), desc, forceStatc, os2);
 
-        //订单总金额
-        orderStatistics.setDataType("1");
-        //家具订单金额不会存在小数，都是整元。所以这里合计的时候直接用long类型相加即可
-        orderStatistics.setStatcValue(furnitureOrderList.stream().mapToLong(o->o.getTotalMoney().longValue()).sum());
-        orderStatistics.setId(null);//上一步insert操作时，主键会自动回填，这里需要设置为null
-        orderStatisticsService.insertOrderStatistics(orderStatistics);
+    }
 
-        //订单支付总金额
-        orderStatistics.setDataType("2");
-        orderStatistics.setStatcValue(furnitureOrderList.stream().mapToLong(o->o.getPaidMoney().longValue()).sum());
-        orderStatistics.setId(null);//上一步insert操作时，主键会自动回填，这里需要设置为null
-        orderStatisticsService.insertOrderStatistics(orderStatistics);
+    private void doStatisticsAndSaveByType(boolean needStatc_type, String statcDate, String dataType, String dataTypeDesc, Long ststcValue, String desc,  boolean forceStatc,  OrderStatistics os) {
+
+        OrderStatistics orderStatistics = new OrderStatistics();
+        orderStatistics.setCreateBy("system");
+        orderStatistics.setStatcDate(statcDate);
+
+        if (needStatc_type) {
+            if (os != null) {
+                logger.info("{}订单[{}]统计，统计已存在，当前是{}统计，执行修改操作", desc, dataTypeDesc, forceStatc ? "[强制]" : "[非强制]");
+                os.setStatcValue(ststcValue);
+                orderStatisticsService.updateOrderStatistics(os);
+            } else {
+                logger.info("{}订单[{}]统计，统计不存在，当前是{}统计，执行新增操作", desc, dataTypeDesc, forceStatc ? "[强制]" : "[非强制]");
+                orderStatistics.setStatcValue(ststcValue);
+                orderStatistics.setDataType(dataType);
+                orderStatisticsService.insertOrderStatistics(orderStatistics);
+            }
+            
+        }
 
     }
 
