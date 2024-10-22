@@ -14,7 +14,7 @@ public class BackupScheduler {
 
     private static final Logger logger = LoggerFactory.getLogger(BackupScheduler.class);
 
-    @Scheduled(cron = "0 0/5 * * * ?") // 每小时执行一次
+    @Scheduled(cron = "0 0 0/1 * * ?") // 每小时执行一次
     public void performBackup() {
         logger.info("开始执行数据库备份...");
         
