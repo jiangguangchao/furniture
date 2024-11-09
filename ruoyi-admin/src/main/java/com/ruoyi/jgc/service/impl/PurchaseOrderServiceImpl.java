@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.PurchaseOrderMapper;
 import com.ruoyi.jgc.domain.PurchaseOrder;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.jgc.domain.AssociationType;
 import com.ruoyi.jgc.domain.FurnitureOrder;
 import com.ruoyi.jgc.domain.PaymentRecord;
@@ -77,6 +78,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
     @Override
     public int insertPurchaseOrder(PurchaseOrder purchaseOrder)
     {
+        purchaseOrder.setId(DateUtils.dateTimeNow(DateUtils.YYYYMMDDHHMMSS));
         int result = purchaseOrderMapper.insertPurchaseOrder(purchaseOrder);
         //更新上传文件记录
         // List<UploadFile> uploadFiles = purchaseOrder.getUploadFiles();

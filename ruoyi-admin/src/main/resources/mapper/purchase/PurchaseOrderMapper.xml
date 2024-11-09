@@ -43,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertPurchaseOrder" parameterType="PurchaseOrder" useGeneratedKeys="true" keyProperty="id">
         insert into purchase_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">id,</if>
             <if test="supplier != null and supplier != ''">supplier,</if>
             <if test="purchaseDate != null">purchase_date,</if>
             <if test="arrivalStatus != null and arrivalStatus != ''">arrival_status,</if>
@@ -57,6 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">#{id},</if>
             <if test="supplier != null and supplier != ''">#{supplier},</if>
             <if test="purchaseDate != null">#{purchaseDate},</if>
             <if test="arrivalStatus != null and arrivalStatus != ''">#{arrivalStatus},</if>
