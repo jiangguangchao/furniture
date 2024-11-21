@@ -69,6 +69,8 @@ public class FurnitureOrder extends BaseEntity
 
     private String deliveryStatus;
 
+    private String includeCustom;
+
     public String getPaymentStatus() {
         return paymentStatus;
     }
@@ -201,6 +203,14 @@ public class FurnitureOrder extends BaseEntity
     public String getCreateUser() 
     {
         return createUser;
+    }
+
+    public String getIncludeCustom() {
+        return includeCustom;
+    }
+
+    public void setIncludeCustom(String includeCustom) {
+        this.includeCustom = includeCustom;
     }
 
     @Override

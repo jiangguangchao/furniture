@@ -57,6 +57,8 @@ public class FurnitureOrderServiceImpl implements IFurnitureOrderService
     @Override
     public int insertFurnitureOrder(FurnitureOrder furnitureOrder)
     {
+        furnitureOrder.setPaymentStatus("0");//新增订单支付状态为未支付
+        furnitureOrder.setDeliveryStatus("0");//未配送
         furnitureOrder.setCreateTime(DateUtils.getNowDate());
         furnitureOrder.setId(DateUtils.dateTimeNow(DateUtils.YYYYMMDDHHMMSS));
         return furnitureOrderMapper.insertFurnitureOrder(furnitureOrder);

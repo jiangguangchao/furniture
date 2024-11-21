@@ -21,11 +21,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createUser"    column="create_user"    />
         <result property="paymentStatus"    column="payment_status"    />
         <result property="deliveryStatus"    column="delivery_status"    />
+        <result property="includeCustom" column="include_custom" />
     </resultMap>
 
     <sql id="selectFurnitureOrderVo">
         select id, total_money, paid_money, order_status, order_time, order_user, phone_number, district, 
-            town, village, dui, sub_village, create_time, create_user, remark , payment_status, delivery_status
+            town, village, dui, sub_village, create_time, create_user, remark , payment_status, delivery_status,
+            include_custom
         from furniture_order
     </sql>
 
@@ -46,7 +48,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="village != null  and village != ''"> and village = #{village}</if>
             <if test="paymentStatus != null  and paymentStatus != ''"> and payment_status = #{paymentStatus}</if>
             <if test="deliveryStatus != null  and deliveryStatus != ''"> and delivery_status = #{deliveryStatus}</if>
+            <if test="includeCustom != null  and includeCustom != ''"> and include_custom = #{includeCustom}</if>
         </where>
+        order by order_time desc
     </select>
     
     <select id="selectFurnitureOrderById" parameterType="String" resultMap="FurnitureOrderResult">
@@ -74,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
             <if test="paymentStatus != null and paymentStatus != ''">payment_status,</if>
             <if test="deliveryStatus != null and deliveryStatus != ''">delivery_status,</if>
+            <if test="includeCustom != null and includeCustom != ''">include_custom,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -93,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">#{remark},</if>
             <if test="paymentStatus != null and paymentStatus != ''">#{paymentStatus},</if>
             <if test="deliveryStatus != null and deliveryStatus != ''">#{deliveryStatus},</if>
+            <if test="includeCustom != null and includeCustom != ''">#{includeCustom},</if>
          </trim>
     </insert>
 
@@ -115,6 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark = #{remark},</if>
             <if test="paymentStatus != null and paymentStatus != ''">payment_status = #{paymentStatus},</if>
             <if test="deliveryStatus != null and deliveryStatus != ''">delivery_status = #{deliveryStatus},</if>
+            <if test="includeCustom != null and includeCustom != ''">include_custom = #{includeCustom},</if>
         </trim>
         where id = #{id}
     </update>

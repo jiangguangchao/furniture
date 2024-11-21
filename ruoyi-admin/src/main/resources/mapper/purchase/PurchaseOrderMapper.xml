@@ -33,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="paymentStatus != null  and paymentStatus != ''"> and payment_status = #{paymentStatus}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by purchase_date desc
     </select>
     
     <select id="selectPurchaseOrderById" parameterType="String" resultMap="PurchaseOrderResult">
