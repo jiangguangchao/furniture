@@ -65,6 +65,10 @@ public class PurchaseOrder extends BaseEntity
 
     private List<UploadFile> uploadFiles;
 
+    private String logistics;
+
+    private Integer logisticsMoney;
+
     public void setId(String id) 
     {
         this.id = id;
@@ -178,6 +182,23 @@ public class PurchaseOrder extends BaseEntity
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
+
+    public String getLogistics() {
+        return logistics;
+    }
+
+    public void setLogistics(String logistics) {
+        this.logistics = logistics;
+    }
+
+    public Integer getLogisticsMoney() {
+        return logisticsMoney;
+    }
+
+    public void setLogisticsMoney(Integer logisticsMoney) {
+        this.logisticsMoney = logisticsMoney;
+    }
+
 
     @Override
     public String toString() {

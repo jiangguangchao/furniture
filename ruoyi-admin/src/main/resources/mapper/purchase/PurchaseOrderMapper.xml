@@ -17,11 +17,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="paidMoney"    column="paid_money" />
         <result property="paymentStatus"    column="payment_status" />
         <result property="status"    column="status" />
+        <result property="logistics"    column="logistics" />
+        <result property="logisticsMoney"    column="logistics_money" />
     </resultMap>
 
     <sql id="selectPurchaseOrderVo">
         select id, supplier, purchase_date, arrival_status, phone, weichat, goods_list, total_amount, 
-            remarks, paid_money, payment_status, status
+            remarks, paid_money, payment_status, status, logistics, logistics_money
         from purchase_order
     </sql>
 
@@ -56,6 +58,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="paidMoney != null">paid_money,</if>
             <if test="paymentStatus != null">payment_status,</if>
             <if test="status != null">status,</if>
+            <if test="logistics != null">logistics,</if>
+            <if test="logisticsMoney != null">logistics_money,</if>
 
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -71,6 +75,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="paidMoney != null">#{paidMoney},</if>
             <if test="paymentStatus != null">#{paymentStatus},</if>
             <if test="status != null">#{status},</if>
+            <if test="logistics != null">#{logistics},</if>
+            <if test="logisticsMoney != null">#{logisticsMoney},</if>
          </trim>
     </insert>
 
@@ -88,6 +94,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="paidMoney != null">paid_money = #{paidMoney},</if>
             <if test="paymentStatus != null and paymentStatus != ''">payment_status = #{paymentStatus},</if>
             <if test="status != null and status != ''">status = #{status},</if>
+            <if test="logistics != null">logistics = #{logistics},</if>
+            <if test="logisticsMoney != null">logistics_money = #{logisticsMoney},</if>
         </trim>
         where id = #{id}
     </update>
