@@ -34,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="arrivalStatus != null  and arrivalStatus != ''"> and arrival_status = #{arrivalStatus}</if>
             <if test="paymentStatus != null  and paymentStatus != ''"> and payment_status = #{paymentStatus}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="supplier != null  and supplier != ''"> and supplier like concat('%', #{supplier}, '%')</if>
         </where>
         order by purchase_date desc
     </select>
