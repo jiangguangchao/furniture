@@ -69,6 +69,11 @@ public class PurchaseOrder extends BaseEntity
 
     private Integer logisticsMoney;
 
+    /** 家具类别 */
+    private String frunitureCategory;
+
+    
+
     public void setId(String id) 
     {
         this.id = id;
@@ -197,6 +202,14 @@ public class PurchaseOrder extends BaseEntity
 
     public void setLogisticsMoney(Integer logisticsMoney) {
         this.logisticsMoney = logisticsMoney;
+    }
+
+    public String getFrunitureCategory() {
+        return frunitureCategory;
+    }
+
+    public void setFrunitureCategory(String frunitureCategory) {
+        this.frunitureCategory = frunitureCategory;
     }
 
 

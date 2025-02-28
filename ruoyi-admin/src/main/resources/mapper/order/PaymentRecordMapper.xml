@@ -16,11 +16,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
         <result property="paymentMethod"    column="payment_method"    />
         <result property="associationType"    column="association_type"    />
+        <result property="payer" column="payer" />
+        <result property="payee" column="payee" />
     </resultMap>
 
     <sql id="selectPaymentRecordVo">
         select id, order_id, payment_time, payment_amount, payment_method, create_by, create_time, 
-            update_by, update_time, remark, association_type
+            update_by, update_time, remark, association_type, payer, payee
         from payment_record
     </sql>
 
@@ -51,6 +53,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
             <if test="paymentMethod != null">payment_method,</if>
             <if test="associationType != null and associationType != ''">association_type,</if>
+            <if test="payer != null">payer,</if>
+            <if test="payee != null">payee,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">#{orderId},</if>
@@ -63,6 +67,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">#{remark},</if>
             <if test="paymentMethod != null">#{paymentMethod},</if>
             <if test="associationType != null and associationType != ''">#{associationType},</if>
+            <if test="payer != null">#{payer},</if>
+            <if test="payee != null">#{payee},</if>
          </trim>
     </insert>
 
@@ -79,6 +85,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark = #{remark},</if>
             <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
             <if test="associationType != null and associationType != ''">association_type = #{associationType},</if>
+            <if test="payer != null">payer = #{payer},</if>
+            <if test="payee != null">payee = #{payee},</if>
         </trim>
         where id = #{id}
     </update>

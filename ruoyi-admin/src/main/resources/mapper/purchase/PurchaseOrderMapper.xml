@@ -19,22 +19,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="status" />
         <result property="logistics"    column="logistics" />
         <result property="logisticsMoney"    column="logistics_money" />
+        <result property="frunitureCategory" column="fruniture_category" />
     </resultMap>
 
     <sql id="selectPurchaseOrderVo">
         select id, supplier, purchase_date, arrival_status, phone, weichat, goods_list, total_amount, 
-            remarks, paid_money, payment_status, status, logistics, logistics_money
+            remarks, paid_money, payment_status, status, logistics, logistics_money, fruniture_category
         from purchase_order
     </sql>
 
     <select id="selectPurchaseOrderList" parameterType="PurchaseOrder" resultMap="PurchaseOrderResult">
         <include refid="selectPurchaseOrderVo"/>
         <where>  
-            <if test="params.beginPurchaseDate != null and params.beginPurchaseDate != '' and params.endPurchaseDate != null and params.endPurchaseDate != ''"> and purchase_date between #{params.beginPurchaseDate} and #{params.endPurchaseDate}</if>
+            <if test="params.beginPurchaseDate != null and params.beginPurchaseDate != '' 
+                and params.endPurchaseDate != null and params.endPurchaseDate != ''"> 
+                and purchase_date between #{params.beginPurchaseDate} and #{params.endPurchaseDate}
+            </if>
             <if test="arrivalStatus != null  and arrivalStatus != ''"> and arrival_status = #{arrivalStatus}</if>
             <if test="paymentStatus != null  and paymentStatus != ''"> and payment_status = #{paymentStatus}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="supplier != null  and supplier != ''"> and supplier like concat('%', #{supplier}, '%')</if>
+            <if test="frunitureCategory != null  and frunitureCategory != ''"> and FIND_IN_SET(#{frunitureCategory}, fruniture_category) &gt; 0</if>
         </where>
         order by purchase_date desc
     </select>
@@ -61,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">status,</if>
             <if test="logistics != null">logistics,</if>
             <if test="logisticsMoney != null">logistics_money,</if>
+            <if test="frunitureCategory != null">fruniture_category,</if>
 
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -78,6 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">#{status},</if>
             <if test="logistics != null">#{logistics},</if>
             <if test="logisticsMoney != null">#{logisticsMoney},</if>
+            <if test="frunitureCategory != null">#{frunitureCategory}, </if>
          </trim>
     </insert>
 
@@ -97,6 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null and status != ''">status = #{status},</if>
             <if test="logistics != null">logistics = #{logistics},</if>
             <if test="logisticsMoney != null">logistics_money = #{logisticsMoney},</if>
+            <if test="frunitureCategory != null">fruniture_category = #{frunitureCategory},</if>
         </trim>
         where id = #{id}
     </update>

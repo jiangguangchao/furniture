@@ -46,6 +46,12 @@ public class PaymentRecord extends BaseEntity
 
     private List<UploadFile> uploadFiles;
 
+    /**支付人 */
+    private String payer;
+
+    /**收款人 */
+    private String payee;
+
     public String getPaymentMethod() {
         return paymentMethod;
     }
@@ -104,6 +110,22 @@ public class PaymentRecord extends BaseEntity
 
     public void setUploadFiles(List<UploadFile> uploadFiles) {
         this.uploadFiles = uploadFiles;
+    }
+
+    public String getPayer() {
+        return payer;
+    }
+
+    public void setPayer(String payer) {
+        this.payer = payer;
+    }
+
+    public String getPayee() {
+        return payee;
+    }
+
+    public void setPayee(String payee) {
+        this.payee = payee;
     }
     
 
