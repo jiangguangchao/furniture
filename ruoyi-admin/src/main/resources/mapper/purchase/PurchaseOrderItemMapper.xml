@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.jgc.mapper.PurchaseOrderItemMapper">
+    
+    <resultMap type="PurchaseOrderItem" id="PurchaseOrderItemResult">
+        <result property="id"    column="id"    />
+        <result property="purchaseOrderId"    column="purchase_order_id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="unitPrice"    column="unit_price"    />
+        <result property="quantity"    column="quantity"    />
+    </resultMap>
+
+    <sql id="selectPurchaseOrderItemVo">
+        select id, purchase_order_id, name, type, unit_price, quantity from purchase_order_item
+    </sql>
+
+    <select id="selectPurchaseOrderItemList" parameterType="PurchaseOrderItem" resultMap="PurchaseOrderItemResult">
+        <include refid="selectPurchaseOrderItemVo"/>
+        <where>  
+            <if test="purchaseOrderId != null  and purchaseOrderId != ''"> and purchase_order_id = #{purchaseOrderId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="unitPrice != null "> and unit_price = #{unitPrice}</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+        </where>
+    </select>
+    
+    <select id="selectPurchaseOrderItemById" parameterType="Long" resultMap="PurchaseOrderItemResult">
+        <include refid="selectPurchaseOrderItemVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPurchaseOrderItem" parameterType="PurchaseOrderItem" useGeneratedKeys="true" keyProperty="id">
+        insert into purchase_order_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="purchaseOrderId != null and purchaseOrderId != ''">purchase_order_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="type != null">type,</if>
+            <if test="unitPrice != null">unit_price,</if>
+            <if test="quantity != null">quantity,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="purchaseOrderId != null and purchaseOrderId != ''">#{purchaseOrderId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="type != null">#{type},</if>
+            <if test="unitPrice != null">#{unitPrice},</if>
+            <if test="quantity != null">#{quantity},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePurchaseOrderItem" parameterType="PurchaseOrderItem">
+        update purchase_order_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="purchaseOrderId != null and purchaseOrderId != ''">purchase_order_id = #{purchaseOrderId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="unitPrice != null">unit_price = #{unitPrice},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePurchaseOrderItemById" parameterType="Long">
+        delete from purchase_order_item where id = #{id}
+    </delete>
+
+    <delete id="deletePurchaseOrderItemByIds" parameterType="String">
+        delete from purchase_order_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

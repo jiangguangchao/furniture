@@ -1,6 +1,7 @@
 package com.ruoyi.jgc.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.PurchaseOrderMapper;
 import com.ruoyi.jgc.domain.PurchaseOrder;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.jgc.domain.AssociationType;
 import com.ruoyi.jgc.domain.FurnitureOrder;
 import com.ruoyi.jgc.domain.PaymentRecord;
@@ -166,5 +168,26 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
         }
         order.setPaidMoney(payAmout);
         return updatePurchaseOrder(order);
+    }
+
+    @Override
+    public int updateFrunitureCategory(String id, String frunitureCtgy, String addOrRemove) {
+        PurchaseOrder purchaseOrder = selectPurchaseOrderById(id);
+        String frunitureCategory = purchaseOrder.getFrunitureCategory();
+        if ("1".equals(addOrRemove)) {
+            frunitureCategory = StringUtils.isEmpty(frunitureCategory) ? frunitureCtgy : frunitureCategory + "," + frunitureCtgy;
+        } else {
+            if (StringUtils.isNotEmpty(frunitureCategory)) {
+                String[] frunitureCtgys = frunitureCategory.split(",");
+                List<String> frunitureCtgysList = Arrays.asList(frunitureCtgys);
+                frunitureCtgysList.remove(frunitureCtgy);
+                frunitureCategory = StringUtils.join(frunitureCtgysList, ",");
+            }
+        }
+
+        PurchaseOrder updatPurchaseOrder = new PurchaseOrder();
+        updatPurchaseOrder.setId(id);
+        updatPurchaseOrder.setFrunitureCategory(frunitureCategory);
+        return updatePurchaseOrder(updatPurchaseOrder);
     }
 }

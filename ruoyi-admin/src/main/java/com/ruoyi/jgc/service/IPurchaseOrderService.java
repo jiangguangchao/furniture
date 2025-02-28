@@ -45,6 +45,15 @@ public interface IPurchaseOrderService
      */
     public int updatePurchaseOrder(PurchaseOrder purchaseOrder);
 
+    /**
+     * 修改进货单中的家具类型字段
+     * @param id
+     * @param frunitureCtgy
+     * @param addOrRemove 1：增加；其他：删除
+     * @return
+     */
+    public int updateFrunitureCategory(String id, String  frunitureCtgy, String addOrRemove);
+
         /**
      * 根据支付记录修改订单中的已支付金额和支付状态
      * @param 
