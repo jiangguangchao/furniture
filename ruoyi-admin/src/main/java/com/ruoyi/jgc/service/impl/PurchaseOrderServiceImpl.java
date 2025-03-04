@@ -1,6 +1,7 @@
 package com.ruoyi.jgc.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -179,7 +180,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
         } else {
             if (StringUtils.isNotEmpty(frunitureCategory)) {
                 String[] frunitureCtgys = frunitureCategory.split(",");
-                List<String> frunitureCtgysList = Arrays.asList(frunitureCtgys);
+                List<String> frunitureCtgysList = new ArrayList<>(Arrays.asList(frunitureCtgys));
                 frunitureCtgysList.remove(frunitureCtgy);
                 frunitureCategory = StringUtils.join(frunitureCtgysList, ",");
             }
@@ -190,4 +191,5 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
         updatPurchaseOrder.setFrunitureCategory(frunitureCategory);
         return updatePurchaseOrder(updatPurchaseOrder);
     }
+
 }
