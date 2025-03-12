@@ -86,7 +86,7 @@ public class OrderStatisticsController extends BaseController
     @PostMapping
     public AjaxResult statcByDate(@RequestBody OrderStatisticsDto orderStatistics)
     {
-        taskSchedule.doStatisticsAndSave(orderStatistics.getDateType(), , getUsername(), getUsername(), false);
+        // taskSchedule.doStatisticsAndSave(orderStatistics.getDateType(), , getUsername(), getUsername(), false);
         return toAjax(1);
     }
 
