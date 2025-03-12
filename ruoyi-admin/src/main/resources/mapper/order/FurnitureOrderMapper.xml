@@ -22,12 +22,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="paymentStatus"    column="payment_status"    />
         <result property="deliveryStatus"    column="delivery_status"    />
         <result property="includeCustom" column="include_custom" />
+        <result property="areaType"    column="area_type"    />
+        <result property="urbanAddress"    column="urban_address"    />
+        <result property="profit"    column="profit"    />
     </resultMap>
 
     <sql id="selectFurnitureOrderVo">
         select id, total_money, paid_money, order_status, order_time, order_user, phone_number, district, 
             town, village, dui, sub_village, create_time, create_user, remark , payment_status, delivery_status,
-            include_custom
+            include_custom, area_type, urban_address, profit
         from furniture_order
     </sql>
 
@@ -49,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="paymentStatus != null  and paymentStatus != ''"> and payment_status = #{paymentStatus}</if>
             <if test="deliveryStatus != null  and deliveryStatus != ''"> and delivery_status = #{deliveryStatus}</if>
             <if test="includeCustom != null  and includeCustom != ''"> and include_custom = #{includeCustom}</if>
+            <if test="areaType != null  and areaType != ''"> and area_type = #{areaType}</if>
         </where>
         order by order_time desc
     </select>
@@ -79,6 +83,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="paymentStatus != null and paymentStatus != ''">payment_status,</if>
             <if test="deliveryStatus != null and deliveryStatus != ''">delivery_status,</if>
             <if test="includeCustom != null and includeCustom != ''">include_custom,</if>
+            <if test="areaType != null and areaType != ''">area_type,</if>
+            <if test="urbanAddress != null and urbanAddress != ''">urban_address,</if>
+            <if test="profit != null">profit,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -99,6 +106,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="paymentStatus != null and paymentStatus != ''">#{paymentStatus},</if>
             <if test="deliveryStatus != null and deliveryStatus != ''">#{deliveryStatus},</if>
             <if test="includeCustom != null and includeCustom != ''">#{includeCustom},</if>
+            <if test="areaType != null and areaType != ''">#{areaType},</if>
+            <if test="urbanAddress != null and urbanAddress != ''">#{urbanAddress},</if>
+            <if test="profit != null">#{profit},</if>
          </trim>
     </insert>
 
@@ -122,6 +132,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="paymentStatus != null and paymentStatus != ''">payment_status = #{paymentStatus},</if>
             <if test="deliveryStatus != null and deliveryStatus != ''">delivery_status = #{deliveryStatus},</if>
             <if test="includeCustom != null and includeCustom != ''">include_custom = #{includeCustom},</if>
+            <if test="areaType != null and areaType != ''">area_type = #{areaType},</if>
+            <if test="urbanAddress != null and urbanAddress != ''">urban_address = #{urbanAddress},</if>
+            <if test="profit != null">profit = #{profit},</if>
         </trim>
         where id = #{id}
     </update>

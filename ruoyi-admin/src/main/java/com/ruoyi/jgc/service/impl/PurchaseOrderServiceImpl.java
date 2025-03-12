@@ -16,6 +16,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.jgc.domain.AssociationType;
 import com.ruoyi.jgc.domain.FurnitureOrder;
 import com.ruoyi.jgc.domain.PaymentRecord;
+import com.ruoyi.jgc.domain.PicAssociationType;
 import com.ruoyi.jgc.service.IPurchaseOrderService;
 import com.ruoyi.system.domain.UploadFile;
 import com.ruoyi.system.service.IUploadFileService;
@@ -62,7 +63,7 @@ public class PurchaseOrderServiceImpl implements IPurchaseOrderService
         //查询附属图片
         if (CollectionUtils.isNotEmpty(purchaseOrders)) {
             UploadFile query = new UploadFile();
-            query.setAssociationType(AssociationType.PURCHASE_ORDER.getCode());
+            query.setAssociationType(PicAssociationType.PURCHASE_ORDER.getCode());
             purchaseOrders.forEach(p -> {
                 query.setAssociationId(p.getId() + "");
                 List<UploadFile> uploadFiles = uploadFileService.selectUploadFileList(query);

@@ -6,7 +6,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.PurchaseOrderItemMapper;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.jgc.domain.AssociationType;
+import com.ruoyi.jgc.domain.PicAssociationType;
 import com.ruoyi.jgc.domain.PurchaseOrderItem;
 import com.ruoyi.jgc.service.IPurchaseOrderItemService;
 import com.ruoyi.system.domain.UploadFile;
@@ -33,7 +35,7 @@ public class PurchaseOrderItemServiceImpl implements IPurchaseOrderItemService
      * @return 进货单明细
      */
     @Override
-    public PurchaseOrderItem selectPurchaseOrderItemById(Long id)
+    public PurchaseOrderItem selectPurchaseOrderItemById(String id)
     {
         return purchaseOrderItemMapper.selectPurchaseOrderItemById(id);
     }
@@ -52,10 +54,9 @@ public class PurchaseOrderItemServiceImpl implements IPurchaseOrderItemService
         //查询附属图片
         if (CollectionUtils.isNotEmpty(purchaseOrderItems)) {
             UploadFile query = new UploadFile();
-            query.setAssociationType(AssociationType.PURCHASE_ORDER.getCode());
+            query.setAssociationType(PicAssociationType.PURCHASE_ORDER_ITME.getCode());
             purchaseOrderItems.forEach(p -> {
                 query.setAssociationId(p.getId() + "");
-                query.setAssociationType("POI");
                 List<UploadFile> uploadFiles = uploadFileService.selectUploadFileList(query);
                 p.setUploadFiles(uploadFiles);
             });
@@ -72,6 +73,7 @@ public class PurchaseOrderItemServiceImpl implements IPurchaseOrderItemService
     @Override
     public int insertPurchaseOrderItem(PurchaseOrderItem purchaseOrderItem)
     {
+        purchaseOrderItem.setId(DateUtils.dateTimeNow(DateUtils.YYYYMMDDHHMMSS));
         return purchaseOrderItemMapper.insertPurchaseOrderItem(purchaseOrderItem);
     }
 
@@ -94,7 +96,7 @@ public class PurchaseOrderItemServiceImpl implements IPurchaseOrderItemService
      * @return 结果
      */
     @Override
-    public int deletePurchaseOrderItemByIds(Long[] ids)
+    public int deletePurchaseOrderItemByIds(String[] ids)
     {
         return purchaseOrderItemMapper.deletePurchaseOrderItemByIds(ids);
     }
@@ -106,7 +108,7 @@ public class PurchaseOrderItemServiceImpl implements IPurchaseOrderItemService
      * @return 结果
      */
     @Override
-    public int deletePurchaseOrderItemById(Long id)
+    public int deletePurchaseOrderItemById(String id)
     {
         return purchaseOrderItemMapper.deletePurchaseOrderItemById(id);
     }

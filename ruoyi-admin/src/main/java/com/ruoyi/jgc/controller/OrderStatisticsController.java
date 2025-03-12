@@ -17,6 +17,8 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.jgc.domain.OrderStatistics;
+import com.ruoyi.jgc.domain.OrderStatisticsDto;
+import com.ruoyi.jgc.schedule.TaskSchedule;
 import com.ruoyi.jgc.service.IOrderStatisticsService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -33,6 +35,13 @@ public class OrderStatisticsController extends BaseController
 {
     @Autowired
     private IOrderStatisticsService orderStatisticsService;
+
+
+    //订单统计的定时任务，这里这么引入有点奇怪，但是taskSchedule中提供了
+    //订单统计的方法，可以传入需要统计的日期直接进行统计，非常方便。为了省事，就这样做了。
+    //实际上，统计的方法应该写到一个service中。
+    @Autowired
+    private TaskSchedule taskSchedule;
 
     /**
      * 查询订单统计列表
@@ -70,14 +79,15 @@ public class OrderStatisticsController extends BaseController
     }
 
     /**
-     * 新增订单统计
+     * 根据指定日期统计
      */
     @PreAuthorize("@ss.hasPermi('statistics:orderStatistics:add')")
     @Log(title = "订单统计", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody OrderStatistics orderStatistics)
+    public AjaxResult statcByDate(@RequestBody OrderStatisticsDto orderStatistics)
     {
-        return toAjax(orderStatisticsService.insertOrderStatistics(orderStatistics));
+        taskSchedule.doStatisticsAndSave(orderStatistics.getDateType(), , getUsername(), getUsername(), false);
+        return toAjax(1);
     }
 
     /**

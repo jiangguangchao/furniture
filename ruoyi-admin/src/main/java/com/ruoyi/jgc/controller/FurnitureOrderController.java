@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -92,8 +93,37 @@ public class FurnitureOrderController extends BaseController
     {
         furnitureOrder.setUpdateBy(getUsername());
         furnitureOrder.setUpdateTime(new Date());
+        if ("5".equals(furnitureOrder.getOrderStatus())) {
+            //如果订单状态修改为“5”（已完成），则修改支付状态为“支付完成”，修改配送状态为“配送完成”
+            furnitureOrder.setPaymentStatus("2");
+            furnitureOrder.setDeliveryStatus("3");
+        }
         return toAjax(furnitureOrderService.updateFurnitureOrder(furnitureOrder));
     }
+
+    /**
+     * 修改家具订单相关状态（订单状态，支付状态，配送状态）
+     */
+    @PreAuthorize("@ss.hasPermi('order:furnitureOrder:edit')")
+    @Log(title = "家具订单", businessType = BusinessType.UPDATE)
+    @PutMapping("/editStatus")
+    public AjaxResult editStatus(@RequestBody FurnitureOrder furnitureOrder)
+    {
+        FurnitureOrder updaFurnitureOrder = new FurnitureOrder();
+        updaFurnitureOrder.setId(furnitureOrder.getId());
+        updaFurnitureOrder.setUpdateBy(getUsername());
+        updaFurnitureOrder.setUpdateTime(new Date());
+        updaFurnitureOrder.setPaymentStatus(furnitureOrder.getPaymentStatus());
+        updaFurnitureOrder.setDeliveryStatus(furnitureOrder.getDeliveryStatus());
+        updaFurnitureOrder.setOrderStatus(furnitureOrder.getOrderStatus());
+        if ("5".equals(updaFurnitureOrder.getOrderStatus())) {
+            //如果订单状态修改为“5”（已完成），则修改支付状态为“支付完成”，修改配送状态为“配送完成”
+            updaFurnitureOrder.setPaymentStatus("2");
+            updaFurnitureOrder.setDeliveryStatus("3");
+        }
+        return toAjax(furnitureOrderService.updateFurnitureOrder(furnitureOrder));
+    }
+
 
     /**
      * 删除家具订单

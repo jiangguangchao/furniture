@@ -36,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertPurchaseOrderItem" parameterType="PurchaseOrderItem" useGeneratedKeys="true" keyProperty="id">
         insert into purchase_order_item
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">id,</if>
             <if test="purchaseOrderId != null and purchaseOrderId != ''">purchase_order_id,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="type != null">type,</if>
@@ -43,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="quantity != null">quantity,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">#{id},</if>
             <if test="purchaseOrderId != null and purchaseOrderId != ''">#{purchaseOrderId},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="type != null">#{type},</if>
@@ -63,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deletePurchaseOrderItemById" parameterType="Long">
+    <delete id="deletePurchaseOrderItemById" parameterType="String">
         delete from purchase_order_item where id = #{id}
     </delete>
 

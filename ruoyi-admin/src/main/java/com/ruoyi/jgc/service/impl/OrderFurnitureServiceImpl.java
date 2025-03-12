@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.OrderFurnitureMapper;
 import com.ruoyi.jgc.domain.FurnitureOrder;
 import com.ruoyi.jgc.domain.OrderFurniture;
+import com.ruoyi.jgc.domain.PicAssociationType;
 import com.ruoyi.jgc.service.IFurnitureOrderService;
 import com.ruoyi.jgc.service.IOrderFurnitureService;
+import com.ruoyi.system.domain.UploadFile;
+import com.ruoyi.system.service.IUploadFileService;
 
 /**
  * 订单中家具Service业务层处理
@@ -28,6 +31,8 @@ public class OrderFurnitureServiceImpl implements IOrderFurnitureService
     private OrderFurnitureMapper orderFurnitureMapper;
     @Autowired
     private IFurnitureOrderService orderService;
+    @Autowired
+    private IUploadFileService  uploadFileService;
 
     /**
      * 查询订单中家具
@@ -36,7 +41,7 @@ public class OrderFurnitureServiceImpl implements IOrderFurnitureService
      * @return 订单中家具
      */
     @Override
-    public OrderFurniture selectOrderFurnitureById(Long id)
+    public OrderFurniture selectOrderFurnitureById(String id)
     {
         return orderFurnitureMapper.selectOrderFurnitureById(id);
     }
@@ -50,7 +55,19 @@ public class OrderFurnitureServiceImpl implements IOrderFurnitureService
     @Override
     public List<OrderFurniture> selectOrderFurnitureList(OrderFurniture orderFurniture)
     {
-        return orderFurnitureMapper.selectOrderFurnitureList(orderFurniture);
+        List<OrderFurniture> orderFurnitures = orderFurnitureMapper.selectOrderFurnitureList(orderFurniture);
+        //查询附属图片
+        if (CollectionUtils.isNotEmpty(orderFurnitures)) {
+            UploadFile query = new UploadFile();
+            query.setAssociationType(PicAssociationType.ORDER_FURNITURE_ITEM.getCode());
+            orderFurnitures.forEach(p -> {
+                query.setAssociationId(p.getId() + "");
+                List<UploadFile> uploadFiles = uploadFileService.selectUploadFileList(query);
+                p.setUploadFiles(uploadFiles);
+            });
+        }
+        return orderFurnitures;
+
     }
 
     /**
@@ -63,8 +80,9 @@ public class OrderFurnitureServiceImpl implements IOrderFurnitureService
     public int insertOrderFurniture(OrderFurniture orderFurniture)
     {
         orderFurniture.setCreateTime(DateUtils.getNowDate());
+        orderFurniture.setId(DateUtils.dateTimeNow(DateUtils.YYYYMMDDHHMMSS));
         int result = orderFurnitureMapper.insertOrderFurniture(orderFurniture);
-        updateOrderTotalAmount(orderFurniture.getOrderId());
+        updateOrderInfo(orderFurniture.getOrderId());
         return result;
     }
 
@@ -82,7 +100,7 @@ public class OrderFurnitureServiceImpl implements IOrderFurnitureService
         //不需要修改订单编号。如果订单编号错误可以直接删除配送记录。新增正确的记录
         orderFurniture.setOrderId(null);
         int result = orderFurnitureMapper.updateOrderFurniture(orderFurniture);
-        updateOrderTotalAmount(orderId);
+        updateOrderInfo(orderId);
         return result;
     }
 
@@ -93,7 +111,7 @@ public class OrderFurnitureServiceImpl implements IOrderFurnitureService
      * @return 结果
      */
     @Override
-    public int deleteOrderFurnitureByIds(Long[] ids)
+    public int deleteOrderFurnitureByIds(String[] ids)
     {
         return orderFurnitureMapper.deleteOrderFurnitureByIds(ids);
     }
@@ -105,15 +123,19 @@ public class OrderFurnitureServiceImpl implements IOrderFurnitureService
      * @return 结果
      */
     @Override
-    public int deleteOrderFurnitureById(Long id, String orderId)
+    public int deleteOrderFurnitureById(String id, String orderId)
     {
         int result = orderFurnitureMapper.deleteOrderFurnitureById(id);
-        updateOrderTotalAmount(orderFurnitureMapper.selectOrderFurnitureById(id).getOrderId());
+        updateOrderInfo(orderFurnitureMapper.selectOrderFurnitureById(id).getOrderId());
         return result;
     }
 
+    /**
+     * 修改家具订单信息，本方法是用来修改家具订单中的总金额和总利润的
+     * 本方法一般都是修改（包括新增和删除）订单中家具条目信息时调用的
+     */
     @Override
-    public int updateOrderTotalAmount(String orderId) {
+    public int updateOrderInfo(String orderId) {
         if(StringUtils.isEmpty(orderId)) {
             return 0;
         }
@@ -122,14 +144,17 @@ public class OrderFurnitureServiceImpl implements IOrderFurnitureService
         queryFurniture.setOrderId(orderId);
         List<OrderFurniture> orderFurnitures = orderFurnitureMapper.selectOrderFurnitureList(queryFurniture);
         BigDecimal totalMoney = BigDecimal.ZERO;
+        int totalofProfit = 0;
         if (CollectionUtils.isNotEmpty(orderFurnitures)) {
             for (OrderFurniture orderFurniture : orderFurnitures) {
                 totalMoney = totalMoney.add(orderFurniture.getMoney());
+                totalofProfit += orderFurniture.getProfit();
             }
         }
         FurnitureOrder updateOrder = new FurnitureOrder();
         updateOrder.setId(orderId);
         updateOrder.setTotalMoney(totalMoney);
+        updateOrder.setProfit(totalofProfit);
         return orderService.updateFurnitureOrder(updateOrder);
 
     }

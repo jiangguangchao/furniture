@@ -71,6 +71,15 @@ public class FurnitureOrder extends BaseEntity
 
     private String includeCustom;
 
+    /** 区域类型 是县城还是乡镇*/
+    private String areaType;
+
+    /**县城地址 */
+    private String urbanAddress;
+
+    /** 利润 */
+    private int profit;
+
     public String getPaymentStatus() {
         return paymentStatus;
     }
@@ -211,6 +220,31 @@ public class FurnitureOrder extends BaseEntity
 
     public void setIncludeCustom(String includeCustom) {
         this.includeCustom = includeCustom;
+    }
+
+    public String getAreaType() {
+        return areaType;
+    }
+
+    public void setAreaType(String areaType) {
+        this.areaType = areaType;
+    }
+
+    public String getUrbanAddress() {
+        return urbanAddress;
+    }
+
+    public void setUrbanAddress(String urbanAddress) {
+        this.urbanAddress = urbanAddress;
+    }
+
+    
+    public int getProfit() {
+        return profit;
+    }
+
+    public void setProfit(int profit) {
+        this.profit = profit;
     }
 
     @Override

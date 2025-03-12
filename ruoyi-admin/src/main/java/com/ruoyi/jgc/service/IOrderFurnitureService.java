@@ -17,7 +17,7 @@ public interface IOrderFurnitureService
      * @param id 订单中家具主键
      * @return 订单中家具
      */
-    public OrderFurniture selectOrderFurnitureById(Long id);
+    public OrderFurniture selectOrderFurnitureById(String id);
 
     /**
      * 查询订单中家具列表
@@ -49,7 +49,7 @@ public interface IOrderFurnitureService
      * @param ids 需要删除的订单中家具主键集合
      * @return 结果
      */
-    public int deleteOrderFurnitureByIds(Long[] ids);
+    public int deleteOrderFurnitureByIds(String[] ids);
 
     /**
      * 删除订单中家具信息
@@ -57,12 +57,12 @@ public interface IOrderFurnitureService
      * @param id 订单中家具主键
      * @return 结果
      */
-    public int deleteOrderFurnitureById(Long id, String orderId);
+    public int deleteOrderFurnitureById(String id, String orderId);
 
     /**
      * 更新订单中的总金额
      * @param orderId
      * @return
      */
-    public int updateOrderTotalAmount(String orderId);
+    public int updateOrderInfo(String orderId);
 }

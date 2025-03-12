@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import com.ruoyi.common.utils.DateUtils;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.FurnitureOrderMapper;
@@ -21,6 +23,10 @@ import com.ruoyi.jgc.service.IFurnitureOrderService;
 @Service
 public class FurnitureOrderServiceImpl implements IFurnitureOrderService 
 {
+
+    private static final Logger log = LoggerFactory.getLogger(FurnitureOrderServiceImpl.class);
+
+
     @Autowired
     private FurnitureOrderMapper furnitureOrderMapper;
 
@@ -120,6 +126,7 @@ public class FurnitureOrderServiceImpl implements IFurnitureOrderService
                 }
                 payAmout = payAmout.add(paymentRecord.getPaymentAmount());
             }
+            log.info("根据[{}]支付记录,更新家具订单中的支付金额为[{}]", paymentRecords.size(), payAmout);
 
             //已支付金额和订单金额对比
             FurnitureOrder orderInDB = selectFurnitureOrderById(orderId);

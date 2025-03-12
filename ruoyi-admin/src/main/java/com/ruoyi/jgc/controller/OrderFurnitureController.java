@@ -65,7 +65,7 @@ public class OrderFurnitureController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('order:orderFurniture:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return success(orderFurnitureService.selectOrderFurnitureById(id));
     }

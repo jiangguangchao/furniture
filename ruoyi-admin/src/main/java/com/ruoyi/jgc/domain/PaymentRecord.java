@@ -23,7 +23,7 @@ public class PaymentRecord extends BaseEntity
 
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long id;
+    private String id;
 
     /** 订单编号 */
     @Excel(name = "订单编号")
@@ -59,12 +59,12 @@ public class PaymentRecord extends BaseEntity
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
-    public void setId(Long id) 
+    public void setId(String id) 
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public String getId() 
     {
         return id;
     }

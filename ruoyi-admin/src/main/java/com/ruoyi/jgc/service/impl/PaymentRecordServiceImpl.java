@@ -3,15 +3,19 @@ package com.ruoyi.jgc.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.jgc.mapper.PaymentRecordMapper;
 import com.ruoyi.jgc.domain.AssociationType;
 import com.ruoyi.jgc.domain.FurnitureOrder;
 import com.ruoyi.jgc.domain.PaymentRecord;
+import com.ruoyi.jgc.domain.PicAssociationType;
 import com.ruoyi.jgc.service.IFurnitureOrderService;
 import com.ruoyi.jgc.service.IPaymentRecordService;
 import com.ruoyi.jgc.service.IPurchaseOrderService;
@@ -37,6 +41,8 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
     @Autowired
     private IUploadFileService  uploadFileService;
 
+    private static final Logger log = LoggerFactory.getLogger(PaymentRecordServiceImpl.class);
+
     /**
      * 查询支付记录
      * 
@@ -44,7 +50,7 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
      * @return 支付记录
      */
     @Override
-    public PaymentRecord selectPaymentRecordById(Long id)
+    public PaymentRecord selectPaymentRecordById(String id)
     {
         return paymentRecordMapper.selectPaymentRecordById(id);
     }
@@ -62,7 +68,7 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
         //查询附属图片
         if (CollectionUtils.isNotEmpty(paymentRecords)) {
             UploadFile query = new UploadFile();
-            query.setAssociationType(AssociationType.PAYMENT_RECORD.getCode());
+            query.setAssociationType(PicAssociationType.PAYMENT_RECORD.getCode());
             paymentRecords.forEach(p -> {
                 query.setAssociationId(p.getId() + "");
                 List<UploadFile> uploadFiles = uploadFileService.selectUploadFileList(query);
@@ -81,6 +87,7 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
     @Override
     public int insertPaymentRecord(PaymentRecord paymentRecord)
     {
+        paymentRecord.setId(DateUtils.dateTimeNow(DateUtils.YYYYMMDDHHMMSS));
         int result = paymentRecordMapper.insertPaymentRecord(paymentRecord);
         updateOrderPayment(paymentRecord);
         return result;
@@ -112,7 +119,7 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
      * @return 结果
      */
     @Override
-    public int deletePaymentRecordByIds(Long[] ids)
+    public int deletePaymentRecordByIds(String[] ids)
     {
         return paymentRecordMapper.deletePaymentRecordByIds(ids);
     }
@@ -154,7 +161,6 @@ public class PaymentRecordServiceImpl implements IPaymentRecordService
         quRecord.setOrderId(orderId);
         quRecord.setAssociationType(associationType);
         List<PaymentRecord> paymentRecords = paymentRecordMapper.selectPaymentRecordList(quRecord);
-        
         if (AssociationType.FURNITURE_ORDER.getCode().equals(associationType)) {
             return furnitureOrderService.updateOrderPayment(orderId, paymentRecords);
         } else if (AssociationType.PURCHASE_ORDER.getCode().equals(associationType)) {

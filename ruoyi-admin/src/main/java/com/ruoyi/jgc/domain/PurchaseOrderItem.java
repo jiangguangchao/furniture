@@ -19,7 +19,7 @@ public class PurchaseOrderItem extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private String id;
 
     /** 进货单表id */
     @Excel(name = "进货单表id")
@@ -43,12 +43,12 @@ public class PurchaseOrderItem extends BaseEntity
 
     private List<UploadFile> uploadFiles;
 
-    public void setId(Long id) 
+    public void setId(String id) 
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public String getId() 
     {
         return id;
     }

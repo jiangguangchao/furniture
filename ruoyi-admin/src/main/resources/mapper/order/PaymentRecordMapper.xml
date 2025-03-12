@@ -43,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertPaymentRecord" parameterType="PaymentRecord" useGeneratedKeys="true" keyProperty="id">
         insert into payment_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">id,</if>
             <if test="orderId != null and orderId != ''">order_id,</if>
             <if test="paymentTime != null">payment_time,</if>
             <if test="paymentAmount != null">payment_amount,</if>
@@ -57,6 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payee != null">payee,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">#{id},</if>
             <if test="orderId != null and orderId != ''">#{orderId},</if>
             <if test="paymentTime != null">#{paymentTime},</if>
             <if test="paymentAmount != null">#{paymentAmount},</if>
@@ -91,7 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deletePaymentRecordById" parameterType="Long">
+    <delete id="deletePaymentRecordById" parameterType="String">
         delete from payment_record where id = #{id}
     </delete>
 

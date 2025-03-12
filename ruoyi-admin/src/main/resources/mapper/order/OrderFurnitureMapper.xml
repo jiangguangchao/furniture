@@ -18,10 +18,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="profit"    column="profit"    />
     </resultMap>
 
     <sql id="selectOrderFurnitureVo">
-        select id, order_id, category, style, material, size, bed_width, money, create_by, create_time, update_by, update_time, remark from order_furniture
+        select id, order_id, category, style, material, size, bed_width, money, create_by, 
+        create_time, update_by, update_time, remark, profit from order_furniture
     </sql>
 
     <select id="selectOrderFurnitureList" parameterType="OrderFurniture" resultMap="OrderFurnitureResult">
@@ -45,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertOrderFurniture" parameterType="OrderFurniture" useGeneratedKeys="true" keyProperty="id">
         insert into order_furniture
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
             <if test="orderId != null">order_id,</if>
             <if test="category != null and category != ''">category,</if>
             <if test="style != null">style,</if>
@@ -57,8 +60,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="profit != null">profit,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
             <if test="orderId != null">#{orderId},</if>
             <if test="category != null and category != ''">#{category},</if>
             <if test="style != null">#{style},</if>
@@ -71,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="profit != null">#{profit},</if>
          </trim>
     </insert>
 
@@ -89,11 +95,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="profit != null">profit = #{profit},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteOrderFurnitureById" parameterType="Long">
+    <delete id="deleteOrderFurnitureById" parameterType="String">
         delete from order_furniture where id = #{id}
     </delete>
 

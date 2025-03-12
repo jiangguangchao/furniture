@@ -65,7 +65,7 @@ public class PaymentRecordController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('order:paymentRecord:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return success(paymentRecordService.selectPaymentRecordById(id));
     }

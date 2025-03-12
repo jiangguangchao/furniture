@@ -1,10 +1,13 @@
 package com.ruoyi.jgc.domain;
 
 import java.math.BigDecimal;
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.system.domain.UploadFile;
 
 /**
  * 订单中家具对象 order_furniture
@@ -17,7 +20,7 @@ public class OrderFurniture extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private String id;
 
     /** 订单号 */
     @Excel(name = "订单号")
@@ -47,12 +50,22 @@ public class OrderFurniture extends BaseEntity
     @Excel(name = "金额")
     private BigDecimal money;
 
-    public void setId(Long id) 
+    /**
+     * 图片
+     */
+    private List<UploadFile> uploadFiles;
+
+    /**
+     * 利润
+     */
+    private int profit;
+
+    public void setId(String id) 
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public String getId() 
     {
         return id;
     }
@@ -119,6 +132,23 @@ public class OrderFurniture extends BaseEntity
     {
         return money;
     }
+
+    public void setUploadFiles(List<UploadFile> uploadFiles) {
+        this.uploadFiles = uploadFiles;
+    }
+
+    public List<UploadFile> getUploadFiles() {
+        return uploadFiles;
+    }
+
+    public void setProfit(int profit) {
+        this.profit = profit;
+    }
+
+    public int getProfit() {
+        return profit;
+    }
+    
 
     @Override
     public String toString() {

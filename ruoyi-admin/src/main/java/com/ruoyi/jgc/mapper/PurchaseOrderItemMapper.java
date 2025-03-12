@@ -17,7 +17,7 @@ public interface PurchaseOrderItemMapper
      * @param id 进货单明细主键
      * @return 进货单明细
      */
-    public PurchaseOrderItem selectPurchaseOrderItemById(Long id);
+    public PurchaseOrderItem selectPurchaseOrderItemById(String id);
 
     /**
      * 查询进货单明细列表
@@ -49,7 +49,7 @@ public interface PurchaseOrderItemMapper
      * @param id 进货单明细主键
      * @return 结果
      */
-    public int deletePurchaseOrderItemById(Long id);
+    public int deletePurchaseOrderItemById(String id);
 
     /**
      * 批量删除进货单明细
@@ -57,5 +57,5 @@ public interface PurchaseOrderItemMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePurchaseOrderItemByIds(Long[] ids);
+    public int deletePurchaseOrderItemByIds(String[] ids);
 }

@@ -1,9 +1,11 @@
 package com.ruoyi.jgc.domain;
 
+/**
+ * 付款记录关联类型，目前付款记录只关联两种类型，进货单和家具订单。
+ */
 public enum AssociationType {
     PURCHASE_ORDER("PO", "进货单"),
-    FURNITURE_ORDER("FO", "家具订单"),
-    PAYMENT_RECORD("PR", "付款记录");
+    FURNITURE_ORDER("FO", "家具订单");
 
     private final String code;
     private final String desc;

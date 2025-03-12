@@ -15,7 +15,6 @@ public class OrderStatistics extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
     private Long id;
 
     /** 统计日期 */

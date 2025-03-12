@@ -17,7 +17,7 @@ public interface PaymentRecordMapper
      * @param id 支付记录主键
      * @return 支付记录
      */
-    public PaymentRecord selectPaymentRecordById(Long id);
+    public PaymentRecord selectPaymentRecordById(String id);
 
     /**
      * 查询支付记录列表
@@ -49,7 +49,7 @@ public interface PaymentRecordMapper
      * @param id 支付记录主键
      * @return 结果
      */
-    public int deletePaymentRecordById(Long id);
+    public int deletePaymentRecordById(String id);
 
     /**
      * 批量删除支付记录
@@ -57,5 +57,5 @@ public interface PaymentRecordMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePaymentRecordByIds(Long[] ids);
+    public int deletePaymentRecordByIds(String[] ids);
 }

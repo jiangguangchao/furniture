@@ -18,6 +18,12 @@ import com.ruoyi.jgc.domain.OrderStatistics;
 import com.ruoyi.jgc.service.IFurnitureOrderService;
 import com.ruoyi.jgc.service.IOrderStatisticsService;
 
+/**
+ * 家具订单统计定时任务。
+ * 统计时会按照日（D），月（M），年（Y）进行统计，
+ * 数据类型分 0：订单总数  1：订单总金额 2：已支付总金额
+ * 也就是说会统计每日的订单总数，订单总金额，已支付总金额。每月的...，每年的...
+ */
 @Component
 @EnableScheduling
 public class TaskSchedule {
@@ -71,7 +77,7 @@ public class TaskSchedule {
      * @param endTime
      * @param desc 统计日期类型说明
      */
-    private void doStatisticsAndSave(String dateType, String orderStartTime, String orderEndTime, String desc) {
+    public void doStatisticsAndSave(String dateType, String orderStartTime, String orderEndTime, String desc) {
         doStatisticsAndSave(dateType, orderStartTime, orderEndTime, desc, false);  
     }
 
@@ -84,7 +90,7 @@ public class TaskSchedule {
      * @param forceStatc 是否强制统计 true:是 false:否。强制统计时,会覆盖旧的统计数据，不论统计数据新旧是否一致。
      *         如果是不强制统计，只要存在对应日期的统计数据，就不在统计
      */
-    private void doStatisticsAndSave(String dateType, String orderStartTime, String orderEndTime, String desc, boolean forceStatc) {
+    public void doStatisticsAndSave(String dateType, String orderStartTime, String orderEndTime, String desc, boolean forceStatc) {
         logger.info("开始{}统计{}订单, 统计时间范围[{} -- {}]", forceStatc ? "[强制]" : "[非强制]", desc, orderStartTime, orderEndTime);
 
         String statcDate = DateUtils.getStartTime().substring(0, 10).replace("-", "");
@@ -94,8 +100,11 @@ public class TaskSchedule {
             statcDate = statcDate.substring(0, 4);
         }
 
+        //需要统计订单总数
         boolean needStatc_type0 = true;
+        //需要统计订单总金额
         boolean needStatc_type1 = true;
+        //需要统计已支付金额
         boolean needStatc_type2 = true;
         OrderStatistics os0 = null;
         OrderStatistics os1 = null;
@@ -103,6 +112,7 @@ public class TaskSchedule {
         
         OrderStatistics queryStatc = new OrderStatistics();
         queryStatc.setStatcDate(statcDate);
+        //查询数据库中已存在的指定日期的统计记录
         List<OrderStatistics> orderStatisticsListInDB = orderStatisticsService.selectOrderStatisticsList(queryStatc);
         if (!CollectionUtils.isEmpty(orderStatisticsListInDB)) {
             for (OrderStatistics os : orderStatisticsListInDB) {
