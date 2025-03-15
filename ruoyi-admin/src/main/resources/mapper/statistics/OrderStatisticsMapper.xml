@@ -7,19 +7,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="OrderStatistics" id="OrderStatisticsResult">
         <result property="id"    column="id"    />
         <result property="statcDate"    column="statc_date"    />
-        <result property="dateType"    column="date_type"    />
         <result property="dataType"    column="data_type"    />
         <result property="statcValue"    column="statc_value"    />
     </resultMap>
 
     <sql id="selectOrderStatisticsVo">
-        select id, statc_date, date_type, data_type, statc_value from order_statistics
+        select id, statc_date, data_type, statc_value from order_statistics
     </sql>
 
     <select id="selectOrderStatisticsList" parameterType="OrderStatistics" resultMap="OrderStatisticsResult">
         <include refid="selectOrderStatisticsVo"/>
         <where>  
-            <if test="dateType != null  and dateType != ''"> and date_type = #{dateType}</if>
             <if test="dataType != null  and dataType != ''"> and data_type = #{dataType}</if>
             <if test="params.startDate != null and params.startDate != '' and params.endDate != null and params.endDate != ''"> 
                 and statc_date between #{params.startDate} and #{params.endDate}
@@ -36,13 +34,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into order_statistics
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="statcDate != null and statcDate != ''">statc_date,</if>
-            <if test="dateType != null and dateType != ''">date_type,</if>
             <if test="dataType != null and dataType != ''">data_type,</if>
             <if test="statcValue != null">statc_value,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="statcDate != null and statcDate != ''">#{statcDate},</if>
-            <if test="dateType != null and dateType != ''">#{dateType},</if>
             <if test="dataType != null and dataType != ''">#{dataType},</if>
             <if test="statcValue != null">#{statcValue},</if>
          </trim>
@@ -52,7 +48,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update order_statistics
         <trim prefix="SET" suffixOverrides=",">
             <if test="statcDate != null and statcDate != ''">statc_date = #{statcDate},</if>
-            <if test="dateType != null and dateType != ''">date_type = #{dateType},</if>
             <if test="dataType != null and dataType != ''">data_type = #{dataType},</if>
             <if test="statcValue != null">statc_value = #{statcValue},</if>
         </trim>

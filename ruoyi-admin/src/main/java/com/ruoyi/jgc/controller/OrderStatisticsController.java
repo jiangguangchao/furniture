@@ -1,5 +1,10 @@
 package com.ruoyi.jgc.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,15 +63,15 @@ public class OrderStatisticsController extends BaseController
     /**
      * 导出订单统计列表
      */
-    @PreAuthorize("@ss.hasPermi('statistics:orderStatistics:export')")
-    @Log(title = "订单统计", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, OrderStatistics orderStatistics)
-    {
-        List<OrderStatistics> list = orderStatisticsService.selectOrderStatisticsList(orderStatistics);
-        ExcelUtil<OrderStatistics> util = new ExcelUtil<OrderStatistics>(OrderStatistics.class);
-        util.exportExcel(response, list, "订单统计数据");
-    }
+    // @PreAuthorize("@ss.hasPermi('statistics:orderStatistics:export')")
+    // @Log(title = "订单统计", businessType = BusinessType.EXPORT)
+    // @PostMapping("/export")
+    // public void export(HttpServletResponse response, OrderStatistics orderStatistics)
+    // {
+    //     List<OrderStatistics> list = orderStatisticsService.selectOrderStatisticsList(orderStatistics);
+    //     ExcelUtil<OrderStatistics> util = new ExcelUtil<OrderStatistics>(OrderStatistics.class);
+    //     util.exportExcel(response, list, "订单统计数据");
+    // }
 
     /**
      * 获取订单统计详细信息
@@ -86,29 +91,56 @@ public class OrderStatisticsController extends BaseController
     @PostMapping
     public AjaxResult statcByDate(@RequestBody OrderStatisticsDto orderStatistics)
     {
-        // taskSchedule.doStatisticsAndSave(orderStatistics.getDateType(), , getUsername(), getUsername(), false);
+        String startDate = orderStatistics.getStartDate();
+        String endDate = orderStatistics.getEndDate();
+        // 计算两个日期之间的dateList
+        List<String> dateList = getDateListBetween(startDate, endDate);
+        for (String dateType : orderStatistics.getDateTypeList()) {
+            for (String date : dateList) {
+                taskSchedule.doStatisticsAndSave(dateType, date, true);
+            }
+        }
         return toAjax(1);
     }
 
     /**
      * 修改订单统计
      */
-    @PreAuthorize("@ss.hasPermi('statistics:orderStatistics:edit')")
-    @Log(title = "订单统计", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody OrderStatistics orderStatistics)
-    {
-        return toAjax(orderStatisticsService.updateOrderStatistics(orderStatistics));
-    }
+    // @PreAuthorize("@ss.hasPermi('statistics:orderStatistics:edit')")
+    // @Log(title = "订单统计", businessType = BusinessType.UPDATE)
+    // @PutMapping
+    // public AjaxResult edit(@RequestBody OrderStatistics orderStatistics)
+    // {
+    //     return toAjax(orderStatisticsService.updateOrderStatistics(orderStatistics));
+    // }
 
     /**
      * 删除订单统计
      */
-    @PreAuthorize("@ss.hasPermi('statistics:orderStatistics:remove')")
-    @Log(title = "订单统计", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
-        return toAjax(orderStatisticsService.deleteOrderStatisticsByIds(ids));
+    // @PreAuthorize("@ss.hasPermi('statistics:orderStatistics:remove')")
+    // @Log(title = "订单统计", businessType = BusinessType.DELETE)
+	// @DeleteMapping("/{ids}")
+    // public AjaxResult remove(@PathVariable Long[] ids)
+    // {
+    //     return toAjax(orderStatisticsService.deleteOrderStatisticsByIds(ids));
+    // }
+
+    // 添加方法：获取两个日期之间的所有日期列表
+    private List<String> getDateListBetween(String startDate, String endDate) {
+        List<String> dateList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date start = sdf.parse(startDate);
+            Date end = sdf.parse(endDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(start);
+            while (calendar.getTime().before(end) || calendar.getTime().equals(end)) {
+                dateList.add(sdf.format(calendar.getTime()));
+                calendar.add(Calendar.DATE, 1);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dateList;
     }
 }

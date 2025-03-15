@@ -1,32 +1,44 @@
 package com.ruoyi.jgc.domain;
 
+import java.util.List;
+
 import com.ruoyi.common.annotation.Excel;
 
 public class OrderStatisticsDto {
 
     /** 统计日期 */
-    private String statcDate;
+    private String startDate;
+
+    private String endDate;
 
     /** 日期类型 */
-    private String dateType;
+    private List<String> dateTypeList;
 
     /** 是否是强制统计，如果是强制统计，会覆盖统计表中相同日期的数据 */
     private boolean force;
 
-    public String getStatcDate() {
-        return statcDate;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public void setStatcDate(String statcDate) {
-        this.statcDate = statcDate;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
-    public String getDateType() {
-        return dateType;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setDateType(String dateType) {
-        this.dateType = dateType;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public List<String> getDateTypeList() {
+        return dateTypeList;
+    }
+
+    public void setDateTypeList(List<String> dateTypeList) {
+        this.dateTypeList = dateTypeList;
     }
 
     public boolean isForce() {

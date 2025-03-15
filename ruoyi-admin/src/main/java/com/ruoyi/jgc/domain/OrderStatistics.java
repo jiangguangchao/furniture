@@ -21,9 +21,6 @@ public class OrderStatistics extends BaseEntity
     @Excel(name = "统计日期")
     private String statcDate;
 
-    /** 日期类型 */
-    @Excel(name = "日期类型")
-    private String dateType;
 
     /** 数据类型 对应字典：order_statc_data_type 0：订单总数  1：订单总金额 2：已支付总金额*/
     @Excel(name = "数据类型")
@@ -51,15 +48,6 @@ public class OrderStatistics extends BaseEntity
     {
         return statcDate;
     }
-    public void setDateType(String dateType) 
-    {
-        this.dateType = dateType;
-    }
-
-    public String getDateType() 
-    {
-        return dateType;
-    }
     public void setDataType(String dataType) 
     {
         this.dataType = dataType;
@@ -84,7 +72,6 @@ public class OrderStatistics extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("statcDate", getStatcDate())
-            .append("dateType", getDateType())
             .append("dataType", getDataType())
             .append("statcValue", getStatcValue())
             .toString();
