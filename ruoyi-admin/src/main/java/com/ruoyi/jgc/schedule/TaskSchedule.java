@@ -55,8 +55,8 @@ public class TaskSchedule {
     }
 
     // 从早7点开始每半个小时执行一次今日订单统计
-    // @Scheduled(cron = "0 0/30 7-21 * * ?")
-    @Scheduled(fixedDelay = 1000 * 60 * 3)
+    @Scheduled(cron = "0 0/30 7-21 * * ?")
+    // @Scheduled(fixedDelay = 1000 * 60 * 3)
     public void doTodayStatistics() {
         // 统计今日订单
         doStatisticsAndSave("D", DateUtils.getStartTime(), DateUtils.getStartTime("D", 1));

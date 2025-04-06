@@ -78,7 +78,7 @@ public class FurnitureOrder extends BaseEntity
     private String urbanAddress;
 
     /** 利润 */
-    private int profit;
+    private Integer profit;
 
     public String getPaymentStatus() {
         return paymentStatus;
@@ -239,11 +239,11 @@ public class FurnitureOrder extends BaseEntity
     }
 
     
-    public int getProfit() {
+    public Integer getProfit() {
         return profit;
     }
 
-    public void setProfit(int profit) {
+    public void setProfit(Integer profit) {
         this.profit = profit;
     }
 

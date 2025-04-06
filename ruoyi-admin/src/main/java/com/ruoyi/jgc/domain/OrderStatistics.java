@@ -26,6 +26,9 @@ public class OrderStatistics extends BaseEntity
     @Excel(name = "数据类型")
     private String dataType;
 
+    /**日期类型  */
+    private String dateType;
+
     /** 统计值 */
     @Excel(name = "统计值")
     private Long statcValue;
@@ -65,6 +68,14 @@ public class OrderStatistics extends BaseEntity
     public Long getStatcValue() 
     {
         return statcValue;
+    }
+
+    public String getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(String dateType) {
+        this.dateType = dateType;
     }
 
     @Override

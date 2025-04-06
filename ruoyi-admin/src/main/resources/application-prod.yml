@@ -1,0 +1,4 @@
+server:
+  port: 12311
+  servlet:
+    context-path: /prod-api

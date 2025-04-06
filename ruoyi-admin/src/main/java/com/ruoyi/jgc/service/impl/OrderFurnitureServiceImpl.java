@@ -142,6 +142,7 @@ public class OrderFurnitureServiceImpl implements IOrderFurnitureService
 
         OrderFurniture queryFurniture = new OrderFurniture();
         queryFurniture.setOrderId(orderId);
+        
         List<OrderFurniture> orderFurnitures = orderFurnitureMapper.selectOrderFurnitureList(queryFurniture);
         BigDecimal totalMoney = BigDecimal.ZERO;
         int totalofProfit = 0;
